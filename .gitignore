@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# macOS
+.DS_Store
+.AppleDouble
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temp / output files
+/tmp/
+*.log
+
+# Obsidian
+.obsidian/
+
+# Secrets
+.env
+*.pem
+*.key
