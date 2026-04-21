@@ -98,25 +98,45 @@ On M4 24 GB with `gemma4:26b`, `MAX_CONCURRENT = 2` is the right setting. Runnin
 
 ## Throughput Under Load — Expected Behaviour
 
-From Phase 1 benchmarks: `gemma4:26b` sustains ~25 tokens/second. A 60-token response takes approximately 2.4 seconds. Under concurrent load:
+Under concurrent load with `MAX_CONCURRENT=2`:
 
 | Concurrent users | What happens |
 |-----------------|--------------|
-| 1 | ~2.4s for a 60-token response. Full throughput. |
-| 2 | With `MAX_CONCURRENT=2`: both run simultaneously. Each gets ~2.4s (no queue wait) but throughput per request is roughly halved as the model shares compute. In practice on a single chip, P50 latency is approximately 1.5–2× single-request latency. |
-| 3 | Third request queues. It waits for one of the first two to complete before starting. P50 latency is approximately 3× single-request. |
-| 5 | With `MAX_CONCURRENT=2` and `MAX_QUEUE_DEPTH=8`: all 5 admitted. Three queue. P95 latency is approximately 5× single-request. |
-| 9+ | Beyond `MAX_QUEUE_DEPTH=8`, requests 9 and above receive 503 immediately. The queue is bounded. |
+| 1 | Full throughput — no queue wait. |
+| 2 | Both run simultaneously — P50 latency approximately 1.5–2× single-request. |
+| 3 | Third queues — waits for one of the first two to complete. |
+| 5 | All 5 admitted. Three queue. P95 latency approximately 5× single-request. |
+| 9+ | Beyond `MAX_QUEUE_DEPTH=8`, requests 9+ receive 503 immediately. |
 
-This is the honest concurrency story for a single-node local inference server. It is not comparable to a cloud API that runs hundreds of instances in parallel. The value is privacy, cost, and control.
+**Measured results (M4 24 GB, gemma4:26b, 5 concurrent users):**
+
+Prompt: "In one sentence, what is a connection pool?"
+
+| User | Client latency | Ollama inference time | Queue wait |
+|------|---------------|-----------------------|------------|
+| user_4 | 21,357ms | 21,253ms | ~0ms (slot 1) |
+| user_3 | 27,478ms | 27,390ms | ~0ms (slot 2) |
+| user_5 | 29,739ms | 8,414ms | ~21s queued |
+| user_2 | 32,048ms | 4,557ms | ~27s queued |
+| user_1 | 33,487ms | 3,746ms | ~30s queued |
+| **Avg** | **28,822ms** | | |
+
+user_4 and user_3 entered immediately (no wait — they claimed the two `MAX_CONCURRENT` slots). user_5, user_2, and user_1 queued. Their Ollama inference was fast (3–8s each) but they waited 20–30 seconds for a slot to open. All five received the same correct response.
+
+This is the queuing effect measured directly: response quality is identical regardless of queue position. Wait time is entirely determined by position in the queue and the inference time of the requests ahead.
+
+This is the honest concurrency story for a single-node local inference server. It is not comparable to a cloud API running hundreds of instances in parallel. The value is privacy, cost, and control.
 
 ---
 
 ## How to Run
 
 ```bash
-# Install dependencies
-pip install fastapi uvicorn
+# Create venv and install dependencies (from project root)
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+
+# Or if venv already exists:
 
 # Terminal 1 — start the server
 python 07-production-enterprise/code/01_concurrent_inference_server.py

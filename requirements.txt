@@ -1,0 +1,13 @@
+anyio==4.13.0
+click==8.3.2
+fastapi==0.136.0
+httptools==0.7.1
+pydantic==2.13.3
+pydantic_core==2.46.3
+python-dotenv==1.2.2
+requests==2.33.1
+starlette==1.0.0
+uvicorn==0.44.0
+uvloop==0.22.1
+watchfiles==1.1.1
+websockets==16.0
