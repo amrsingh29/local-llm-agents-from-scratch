@@ -1,4 +1,4 @@
-# Concurrency and Throughput for Local AI Inference
+# Concurrency and Throughput
 
 ## The Problem with Naive Concurrency
 

@@ -1,4 +1,4 @@
-# Temperature and Sampling — Controlling Output Randomness
+# Temperature and Sampling
 
 ## The Wrong Mental Model
 

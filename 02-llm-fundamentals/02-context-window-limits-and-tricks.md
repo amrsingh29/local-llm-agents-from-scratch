@@ -1,5 +1,5 @@
 
-# Context Window Limits and the Lost-in-the-Middle Problem
+# Context Window Limits
 
 ## The Wrong Mental Model
 

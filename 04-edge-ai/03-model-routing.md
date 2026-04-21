@@ -1,4 +1,4 @@
-# Model Routing — Directing Requests to the Right Model
+# Model Routing
 
 ## The Problem Routing Solves
 

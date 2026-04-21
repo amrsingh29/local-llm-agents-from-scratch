@@ -1,4 +1,4 @@
-# LLM Evaluation Framework for ITSM Incident Management
+# ITSM Evaluation Framework
 
 ## Why ITSM Needs a Dedicated Evaluation Framework
 

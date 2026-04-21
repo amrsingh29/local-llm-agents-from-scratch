@@ -1,4 +1,4 @@
-# Self-Hosted AI Architecture for the Enterprise
+# Self-Hosted AI Architecture
 
 ## The Gap Between a Demo and a Production System
 

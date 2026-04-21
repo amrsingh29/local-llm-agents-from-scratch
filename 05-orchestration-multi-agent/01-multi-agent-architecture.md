@@ -1,4 +1,4 @@
-# Multi-Agent Architecture — Why One Agent Is Not Enough
+# Multi-Agent Architecture
 
 ## The Single Agent Failure Mode
 

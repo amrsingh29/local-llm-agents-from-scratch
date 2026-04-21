@@ -1,4 +1,4 @@
-# LLM-as-Judge — Scalable Evaluation With a Local Model
+# LLM-as-Judge
 
 ## The Pattern
 

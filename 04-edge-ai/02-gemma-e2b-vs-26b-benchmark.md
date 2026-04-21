@@ -1,4 +1,4 @@
-# Gemma E2B vs 26B — Benchmark and Decision Framework
+# Gemma E2B vs 26B Benchmark
 
 ## What We Are Testing
 

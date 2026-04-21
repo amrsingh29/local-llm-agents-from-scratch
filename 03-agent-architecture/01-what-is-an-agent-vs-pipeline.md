@@ -1,4 +1,4 @@
-# What Is an Agent vs a Pipeline vs a Chatbot
+# Agent vs Pipeline vs Chatbot
 
 ## Three Things People Call "AI" — Only One Is an Agent
 

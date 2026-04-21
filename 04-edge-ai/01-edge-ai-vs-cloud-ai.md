@@ -1,5 +1,5 @@
 
-# Edge AI vs Cloud AI — The Decision Framework
+# Edge AI vs Cloud AI
 
 ## The Core Question
 

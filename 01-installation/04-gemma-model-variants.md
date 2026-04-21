@@ -1,4 +1,4 @@
-# Gemma 4 Model Variants — E2B, E4B, 26B, 31B Explained
+# Gemma 4 Model Variants
 
 ## The Question That Exposes a Gap
 

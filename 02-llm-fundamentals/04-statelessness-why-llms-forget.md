@@ -1,4 +1,4 @@
-# Statelessness — Why LLMs Forget Everything
+# Statelessness
 
 ## The Wrong Mental Model
 

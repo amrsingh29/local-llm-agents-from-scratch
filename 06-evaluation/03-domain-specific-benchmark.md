@@ -1,4 +1,4 @@
-# Domain-Specific Benchmarks — Evaluating What Actually Matters
+# Domain-Specific Benchmarks
 
 ## Why Generic Benchmarks Fail
 

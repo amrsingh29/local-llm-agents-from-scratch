@@ -1,4 +1,4 @@
-# Ollama Architecture — How the Local Inference Server Works
+# Ollama Architecture
 
 ## The Naive Assumption
 

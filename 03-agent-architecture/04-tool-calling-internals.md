@@ -1,4 +1,4 @@
-# Tool Calling Internals and Error Handling
+# Tool Calling Internals
 
 ## Tools Are Just Functions
 

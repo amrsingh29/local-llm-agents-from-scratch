@@ -1,4 +1,4 @@
-# The ReAct Pattern From First Principles
+# The ReAct Pattern
 
 ## The Problem ReAct Solves
 
