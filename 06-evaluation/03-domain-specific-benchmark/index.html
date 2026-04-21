@@ -1,0 +1,2811 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for building local AI agents from scratch using Gemma.">
+      
+      
+      
+      
+        <link rel="prev" href="../02-llm-as-judge/">
+      
+      
+        <link rel="next" href="../04-itsm-evaluation-framework/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Domain-Specific Benchmarks - Gemma Local AI</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#domain-specific-benchmarks" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Gemma Local AI" class="md-header__button md-logo" aria-label="Gemma Local AI" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Gemma Local AI
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Domain-Specific Benchmarks
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Gemma Local AI" class="md-nav__button md-logo" aria-label="Gemma Local AI" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Gemma Local AI
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Local LLM Agents From Scratch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CURRICULUM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gemma Local AI — Learning Curriculum
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 installation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    01 installation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-installation/01-how-llms-are-packaged/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How LLMs Are Packaged and Distributed
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-installation/02-quantization-from-first-principles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantization From First Principles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-installation/03-ollama-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ollama Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-installation/04-gemma-model-variants/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gemma 4 Model Variants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 llm fundamentals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    02 llm fundamentals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-llm-fundamentals/01-tokens-from-first-principles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tokens From First Principles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-llm-fundamentals/02-context-window-limits-and-tricks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Context Window Limits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-llm-fundamentals/03-temperature-and-sampling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Temperature and Sampling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-llm-fundamentals/04-statelessness-why-llms-forget/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Statelessness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-llm-fundamentals/05-prompt-engineering-as-programming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Engineering as Programming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 agent architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    03 agent architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-agent-architecture/01-what-is-an-agent-vs-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent vs Pipeline vs Chatbot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-agent-architecture/02-the-agent-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Agent Loop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-agent-architecture/03-react-pattern-from-first-principles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The ReAct Pattern
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-agent-architecture/04-tool-calling-internals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tool Calling Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-agent-architecture/05-tool-schema-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tool Schema Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 edge ai
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    04 edge ai
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-edge-ai/01-edge-ai-vs-cloud-ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Edge AI vs Cloud AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-edge-ai/02-gemma-e2b-vs-26b-benchmark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gemma E2B vs 26B Benchmark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-edge-ai/03-model-routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 orchestration multi agent
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    05 orchestration multi agent
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-orchestration-multi-agent/01-multi-agent-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Agent Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-orchestration-multi-agent/02-gemma-as-worker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gemma as a Worker Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 evaluation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    06 evaluation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-why-llm-evaluation-is-hard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why LLM Evaluation Is Hard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-llm-as-judge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM-as-Judge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domain-Specific Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domain-Specific Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-generic-benchmarks-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Generic Benchmarks Fail
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-makes-a-good-benchmark-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Makes a Good Benchmark Question
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What Makes a Good Benchmark Question">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-the-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Question
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-the-reference-answer-for-scoreable-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Reference Answer (for scoreable tasks)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-the-scoring-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The Scoring Rubric
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-domain-for-this-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Domain for This Benchmark
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#benchmark-design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benchmark Design Principles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Benchmark Design Principles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#write-questions-before-running-the-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Write Questions Before Running the Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#include-hard-questions-deliberately" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Include Hard Questions Deliberately
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#balance-task-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Balance Task Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-your-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Your Benchmark
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reading-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading the Results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-benchmark-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiment — Benchmark Results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Experiment — Benchmark Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#category-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category Breakdown
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#per-question-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-Question Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Findings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-quality-vs-cost-decision-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Quality-vs-Cost Decision Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enterprise-implication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Implication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#full-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-itsm-evaluation-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ITSM Evaluation Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 production enterprise
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    07 production enterprise
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-production-enterprise/01-self-hosted-ai-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-Hosted AI Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-production-enterprise/02-concurrency-and-throughput/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concurrency and Throughput
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-production-enterprise/03-audit-logging-compliance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audit Logging for AI Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-production-enterprise/04-guardrails-for-local-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails for Local AI Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-production-enterprise/05-air-gapped-deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Air-Gapped AI Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-generic-benchmarks-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Generic Benchmarks Fail
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-makes-a-good-benchmark-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Makes a Good Benchmark Question
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What Makes a Good Benchmark Question">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-the-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Question
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-the-reference-answer-for-scoreable-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Reference Answer (for scoreable tasks)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-the-scoring-rubric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. The Scoring Rubric
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-domain-for-this-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Domain for This Benchmark
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#benchmark-design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benchmark Design Principles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Benchmark Design Principles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#write-questions-before-running-the-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Write Questions Before Running the Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#include-hard-questions-deliberately" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Include Hard Questions Deliberately
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#balance-task-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Balance Task Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#version-your-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Your Benchmark
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reading-the-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading the Results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-benchmark-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiment — Benchmark Results
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Experiment — Benchmark Results">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#category-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Category Breakdown
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#per-question-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-Question Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Findings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-quality-vs-cost-decision-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Quality-vs-Cost Decision Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enterprise-implication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Implication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#full-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="domain-specific-benchmarks">Domain-Specific Benchmarks</h1>
+<h2 id="why-generic-benchmarks-fail">Why Generic Benchmarks Fail</h2>
+<p>MMLU, HellaSwag, HumanEval — these are the standard benchmarks used to rank models on leaderboards. They measure general reasoning, world knowledge, and coding ability across a broad distribution of topics.</p>
+<p>The problem: your system does not operate on a broad distribution. It operates on a narrow one — your domain, your users, your data.</p>
+<p>A model that scores 90% on MMLU may answer your domain questions at 60%. A model that scores 78% on MMLU may answer your domain questions at 85%. Leaderboard rankings do not predict this. Your own benchmark does.</p>
+<p><strong>The rule:</strong> evaluate on the distribution you care about, not the distribution someone else built a dataset for.</p>
+<hr />
+<h2 id="what-makes-a-good-benchmark-question">What Makes a Good Benchmark Question</h2>
+<p>A benchmark question is not just a question — it is a test case with four components:</p>
+<h3 id="1-the-question">1. The Question</h3>
+<p>Drawn from real user requests or realistic synthetic variants of them. Not from textbooks or general knowledge sources.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Bad:  &quot;What is the OSI model?&quot;
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Good: &quot;A developer reports that their service can ping the database
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>       host but cannot establish a TCP connection on port 5432.
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>       Which OSI layer is the likely failure point, and what are
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>       the two most probable causes?&quot;
+</span></code></pre></div>
+<p>The good question is what a real user in your domain would ask. It requires applied reasoning, not recall.</p>
+<h3 id="2-the-reference-answer-for-scoreable-tasks">2. The Reference Answer (for scoreable tasks)</h3>
+<p>A correct, complete answer written by a domain expert. Used by the judge as the gold standard.</p>
+<h3 id="3-the-scoring-rubric">3. The Scoring Rubric</h3>
+<p>Specific to the question type — not a generic 1–5 scale but a description of what each score means for this question.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>5: Identifies layer 4 (Transport), names both TCP handshake failure
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>   and firewall/ACL block as causes. Optionally mentions pg_hba.conf.
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>4: Correct layer, one of the two causes identified correctly.
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>3: Correct layer but wrong or vague causes.
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>2: Wrong layer but plausible reasoning.
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>1: Wrong layer, wrong causes, or no answer.
+</span></code></pre></div>
+<h3 id="4-metadata">4. Metadata</h3>
+<p>Tags that tell you what capability the question tests. Used to break down scores by category after the run.</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;net_001&quot;</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&quot;category&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;networking&quot;</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">&quot;difficulty&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;medium&quot;</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;reasoning&quot;</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">}</span>
+</span></code></pre></div>
+<hr />
+<h2 id="the-domain-for-this-benchmark">The Domain for This Benchmark</h2>
+<p>For this phase, the benchmark covers <strong>LLM and AI agent concepts</strong> — the same domain this tutorial series teaches. This serves two purposes:</p>
+<ol>
+<li>It tests whether Gemma can answer questions about the material covered in phases 1–5</li>
+<li>It demonstrates the evaluation pattern on a domain where you can judge answer quality yourself</li>
+</ol>
+<p>The benchmark has 10 questions across four categories:</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Questions</th>
+<th>What it tests</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fundamentals</td>
+<td>3</td>
+<td>Tokenization, context windows, temperature</td>
+</tr>
+<tr>
+<td>Agent architecture</td>
+<td>3</td>
+<td>ReAct pattern, tool calling, pipeline vs agent</td>
+</tr>
+<tr>
+<td>Edge AI</td>
+<td>2</td>
+<td>Local vs cloud decision, quantization tradeoffs</td>
+</tr>
+<tr>
+<td>Evaluation</td>
+<td>2</td>
+<td>LLM-as-judge design, benchmark construction</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="benchmark-design-principles">Benchmark Design Principles</h2>
+<h3 id="write-questions-before-running-the-model">Write Questions Before Running the Model</h3>
+<p>If you write questions after seeing model outputs, you unconsciously select questions the model answered well. The benchmark must be written independently of the model being tested.</p>
+<h3 id="include-hard-questions-deliberately">Include Hard Questions Deliberately</h3>
+<p>A benchmark where every question scores 5/5 tells you nothing. Include questions that probe the edges — questions where partial credit (3/5) is a realistic outcome.</p>
+<h3 id="balance-task-types">Balance Task Types</h3>
+<p>Not every question should be the same type. Mix factual, reasoning, and applied questions. A model that scores 5/5 on factual but 2/5 on applied questions has a specific gap — the breakdown by category reveals it.</p>
+<h3 id="version-your-benchmark">Version Your Benchmark</h3>
+<p>Save the benchmark as a JSON file with a version field. When you add questions, create a new version. Never modify existing questions — changes invalidate historical comparisons.</p>
+<hr />
+<h2 id="reading-the-results">Reading the Results</h2>
+<p>After running the benchmark, you have a score distribution. The aggregate average is one number — the breakdown by category is more useful.</p>
+<p>Example output:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Category         Avg Score    Min    Max    Questions
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>fundamentals       4.7        4      5          3
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>agent_arch         3.8        3      5          3
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>edge_ai            4.5        4      5          2
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>evaluation         4.0        3      5          2
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>─────────────────────────────────────────────────
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>OVERALL            4.2        3      5         10
+</span></code></pre></div>
+<p>This tells you: the model is strong on fundamentals and edge AI, weaker on agent architecture. If you are building an agent system with this model, the 3.8 average on agent architecture questions is a risk worth investigating before deployment.</p>
+<hr />
+<h2 id="experiment-benchmark-results">Experiment — Benchmark Results</h2>
+<blockquote>
+<p>Run on Apple M4 24 GB — 2026-04-21
+Script: <code>06-evaluation/code/02_benchmark_harness.py</code>
+Model under test: <code>gemma4:26b</code> | Judge: <code>gemma4:26b</code> | Quality gate: 4.0/5</p>
+</blockquote>
+<h3 id="category-breakdown">Category Breakdown</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Avg</th>
+<th>Min</th>
+<th>Max</th>
+<th>Questions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>agent_architecture</td>
+<td>4.7</td>
+<td>4</td>
+<td>5</td>
+<td>3</td>
+</tr>
+<tr>
+<td>edge_ai</td>
+<td>4.0</td>
+<td>3</td>
+<td>5</td>
+<td>2</td>
+</tr>
+<tr>
+<td>evaluation</td>
+<td>5.0</td>
+<td>5</td>
+<td>5</td>
+<td>2</td>
+</tr>
+<tr>
+<td>fundamentals</td>
+<td>4.3</td>
+<td>4</td>
+<td>5</td>
+<td>3</td>
+</tr>
+<tr>
+<td><strong>OVERALL</strong></td>
+<td><strong>4.5</strong></td>
+<td><strong>3</strong></td>
+<td><strong>5</strong></td>
+<td><strong>10</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Quality gate (4.0/5): PASS</strong></p>
+<h3 id="per-question-results">Per-Question Results</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Score</th>
+<th>Judge reasoning (excerpt)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fund_01</td>
+<td>4/5</td>
+<td>Accurate and covers all key points, but cuts off mid-sentence at the end</td>
+</tr>
+<tr>
+<td>fund_02</td>
+<td>4/5</td>
+<td>Excellent depth, cuts off mid-sentence at the end</td>
+</tr>
+<tr>
+<td>fund_03</td>
+<td>5/5</td>
+<td>Mathematically accurate explanation of logits and Softmax</td>
+</tr>
+<tr>
+<td>agent_01</td>
+<td>4/5</td>
+<td>Excellent explanation but cuts off before naming the fourth component</td>
+</tr>
+<tr>
+<td>agent_02</td>
+<td>5/5</td>
+<td>Accurately explains hallucination risk and stop sequence purpose</td>
+</tr>
+<tr>
+<td>agent_03</td>
+<td>5/5</td>
+<td>Excellent concrete example distinguishing hardcoded vs dynamic fallback</td>
+</tr>
+<tr>
+<td>edge_01</td>
+<td>5/5</td>
+<td>Three distinct, accurate scenarios with technical depth</td>
+</tr>
+<tr>
+<td>edge_02</td>
+<td>3/5</td>
+<td>Correct general categories but misses specific metrics (2.5x, factual recall)</td>
+</tr>
+<tr>
+<td>eval_01</td>
+<td>5/5</td>
+<td>Comprehensive, multi-faceted impact analysis</td>
+</tr>
+<tr>
+<td>eval_02</td>
+<td>5/5</td>
+<td>Accurately identifies selection and confirmation bias</td>
+</tr>
+</tbody>
+</table>
+<h3 id="key-findings">Key Findings</h3>
+<p><strong>Recurrent failure mode — token limit truncation.</strong> Three of the four 4/5 scores (fund_01, fund_02, agent_01) were caused by responses cutting off mid-sentence, not by factual errors. The answers were correct but incomplete because the 600-token <code>num_predict</code> cap was hit. Increasing the limit to 800–1,000 would likely raise these to 5/5.</p>
+<p><strong>One genuine gap — edge_02.</strong> The model correctly identified general patterns from the E2B vs 26B benchmark but did not recall specific numbers (2.5x speedup, which task types scored identically). This is expected — specific benchmark results from this tutorial series are not in Gemma's training data. The model needs retrieval (RAG) to answer questions about its own performance data accurately.</p>
+<p><strong>Evaluation category scored highest (5.0/5).</strong> The model has strong meta-knowledge about evaluation methodology — it correctly explained verbosity bias, benchmark independence, and the risks of post-hoc question writing.</p>
+<p><strong>Total benchmark time: 360 seconds (6 minutes)</strong> for 10 questions + 10 judge calls, all local. Zero API cost.</p>
+<hr />
+<h2 id="the-quality-vs-cost-decision-matrix">The Quality-vs-Cost Decision Matrix</h2>
+<p>Once you have benchmark scores across multiple models, you can make the routing decision quantitatively:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Avg score</th>
+<th>Avg latency</th>
+<th>Cost/1K tokens</th>
+<th>Use when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gemma4:e2b</td>
+<td>[from benchmark]</td>
+<td>~400ms</td>
+<td>$0</td>
+<td>Acceptable quality, speed required</td>
+</tr>
+<tr>
+<td>gemma4:26b</td>
+<td>[from benchmark]</td>
+<td>~1,200ms</td>
+<td>$0</td>
+<td>Quality required, local</td>
+</tr>
+<tr>
+<td>claude-sonnet</td>
+<td>[from benchmark]</td>
+<td>~800ms</td>
+<td>$3.00</td>
+<td>Frontier quality required</td>
+</tr>
+</tbody>
+</table>
+<p>If E2B scores 4.2/5 and 26B scores 4.7/5 for your domain, the question is: is 0.5 points worth 3x the latency? For most tasks, no. For high-stakes tasks (medical, legal, financial), potentially yes.</p>
+<p>The benchmark gives you the data to make this decision. Without it, you are guessing.</p>
+<hr />
+<h2 id="enterprise-implication">Enterprise Implication</h2>
+<p>In production, a domain benchmark is a regression suite. Every deployment goes through it:</p>
+<ol>
+<li>Model version changes → run benchmark → compare to previous</li>
+<li>Prompt engineering changes → run benchmark → did quality improve?</li>
+<li>New data or retrieval strategy → run benchmark → did context quality improve?</li>
+</ol>
+<p>The benchmark is the quality gate. If a change scores below the acceptance threshold, it does not ship.</p>
+<p>This is the same discipline that software teams apply to unit tests. The difference is that LLM regression testing catches quality degradation that unit tests cannot — a prompt change that makes the code correct but the output less useful will pass all unit tests and fail the benchmark.</p>
+<hr />
+<h2 id="key-terms">Key Terms</h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Domain benchmark</td>
+<td>A test set of questions drawn from the actual distribution of requests your system handles</td>
+</tr>
+<tr>
+<td>Reference answer</td>
+<td>The correct answer written by a domain expert, used as the gold standard</td>
+</tr>
+<tr>
+<td>Score distribution</td>
+<td>The spread of scores across benchmark questions — more informative than the average alone</td>
+</tr>
+<tr>
+<td>Quality gate</td>
+<td>A minimum benchmark score that a model or prompt must achieve before deployment</td>
+</tr>
+<tr>
+<td>Regression testing</td>
+<td>Running the benchmark after every change to detect quality degradation</td>
+</tr>
+<tr>
+<td>Category breakdown</td>
+<td>Aggregate scores grouped by question category — reveals specific capability gaps</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="full-code">Full Code</h2>
+<div class="language-python highlight"><span class="filename">02_benchmark_harness.py</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="sd">Domain Benchmark Harness — Phase 6</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="sd">Runs a 10-question benchmark covering LLM and agent concepts.</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="sd">Each question is answered by the model under test, then scored</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="sd">by the LLM judge (Gemma 26B).</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="sd">Produces:</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="sd">  - Per-question scores with judge reasoning</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="sd">  - Category breakdown (avg score per topic area)</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="sd">  - Pass/fail against a quality gate (default: avg &gt;= 4.0)</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="sd">  - Full results saved to /tmp/benchmark_report.json</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="sd">Usage:</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="sd">  python 02_benchmark_harness.py</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="c1"># Load judge from numeric-prefixed file</span>
+</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="n">_judge_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;01_llm_judge.py&quot;</span>
+</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="n">_spec</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">spec_from_file_location</span><span class="p">(</span><span class="s2">&quot;llm_judge&quot;</span><span class="p">,</span> <span class="n">_judge_path</span><span class="p">)</span>
+</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="n">_module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span><span class="n">_spec</span><span class="p">)</span>
+</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="n">_spec</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="n">_module</span><span class="p">)</span>
+</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="n">judge</span> <span class="o">=</span> <span class="n">_module</span><span class="o">.</span><span class="n">judge</span>
+</span><span id="__span-4-31"><a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>
+</span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="n">OLLAMA_URL</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:11434/api/chat&quot;</span>
+</span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="n">MODEL_UNDER_TEST</span> <span class="o">=</span> <span class="s2">&quot;gemma4:26b&quot;</span>
+</span><span id="__span-4-34"><a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="n">QUALITY_GATE</span>     <span class="o">=</span> <span class="mf">4.0</span>  <span class="c1"># minimum acceptable average score</span>
+</span><span id="__span-4-35"><a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>
+</span><span id="__span-4-36"><a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="c1"># -------------------------------------------------------------------</span>
+</span><span id="__span-4-37"><a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="c1"># BENCHMARK — 10 domain-specific questions</span>
+</span><span id="__span-4-38"><a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a><span class="c1"># Written before running the model (see note 03)</span>
+</span><span id="__span-4-39"><a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a><span class="c1"># -------------------------------------------------------------------</span>
+</span><span id="__span-4-40"><a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a>
+</span><span id="__span-4-41"><a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a><span class="n">BENCHMARK</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-4-42"><a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>    <span class="c1"># --- Fundamentals ---</span>
+</span><span id="__span-4-43"><a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a>    <span class="p">{</span>
+</span><span id="__span-4-44"><a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a>        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;fund_01&quot;</span><span class="p">,</span>
+</span><span id="__span-4-45"><a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a>        <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="s2">&quot;fundamentals&quot;</span><span class="p">,</span>
+</span><span id="__span-4-46"><a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a>        <span class="s2">&quot;difficulty&quot;</span><span class="p">:</span> <span class="s2">&quot;easy&quot;</span><span class="p">,</span>
+</span><span id="__span-4-47"><a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a>        <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What is a token in the context of large language models, and why does the number of tokens matter?&quot;</span><span class="p">,</span>
+</span><span id="__span-4-48"><a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a>        <span class="s2">&quot;reference&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="__span-4-49"><a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a>            <span class="s2">&quot;A token is a chunk of text — roughly 3–4 characters for English prose. &quot;</span>
+</span><span id="__span-4-50"><a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a>            <span class="s2">&quot;LLMs process and generate text in tokens, not characters or words. &quot;</span>
+</span><span id="__span-4-51"><a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a>            <span class="s2">&quot;Token count matters because it determines cost (billed per token by cloud APIs), &quot;</span>
+</span><span id="__span-4-52"><a id="__codelineno-4-52" name="__codelineno-4-52" href="#__codelineno-4-52"></a>            <span class="s2">&quot;context window usage (the model can only see a fixed number of tokens at once), &quot;</span>
+</span><span id="__span-4-53"><a id="__codelineno-4-53" name="__codelineno-4-53" href="#__codelineno-4-53"></a>            <span class="s2">&quot;and throughput (tokens per second is the speed metric).&quot;</span>
+</span><span id="__span-4-54"><a id="__codelineno-4-54" name="__codelineno-4-54" href="#__codelineno-4-54"></a>        <span class="p">),</span>
+</span><span id="__span-4-55"><a id="__codelineno-4-55" name="__codelineno-4-55" href="#__codelineno-4-55"></a>    <span class="p">},</span>
+</span><span id="__span-4-56"><a id="__codelineno-4-56" name="__codelineno-4-56" href="#__codelineno-4-56"></a>    <span class="p">{</span>
+</span><span id="__span-4-57"><a id="__codelineno-4-57" name="__codelineno-4-57" href="#__codelineno-4-57"></a>        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;fund_02&quot;</span><span class="p">,</span>
+</span><span id="__span-4-58"><a id="__codelineno-4-58" name="__codelineno-4-58" href="#__codelineno-4-58"></a>        <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="s2">&quot;fundamentals&quot;</span><span class="p">,</span>
+</span><span id="__span-4-59"><a id="__codelineno-4-59" name="__codelineno-4-59" href="#__codelineno-4-59"></a>        <span class="s2">&quot;difficulty&quot;</span><span class="p">:</span> <span class="s2">&quot;medium&quot;</span><span class="p">,</span>
+</span><span id="__span-4-60"><a id="__codelineno-4-60" name="__codelineno-4-60" href="#__codelineno-4-60"></a>        <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="__span-4-61"><a id="__codelineno-4-61" name="__codelineno-4-61" href="#__codelineno-4-61"></a>            <span class="s2">&quot;Explain the &#39;lost in the middle&#39; problem in LLMs. &quot;</span>
+</span><span id="__span-4-62"><a id="__codelineno-4-62" name="__codelineno-4-62" href="#__codelineno-4-62"></a>            <span class="s2">&quot;When does it occur and how can it be mitigated?&quot;</span>
+</span><span id="__span-4-63"><a id="__codelineno-4-63" name="__codelineno-4-63" href="#__codelineno-4-63"></a>        <span class="p">),</span>
+</span><span id="__span-4-64"><a id="__codelineno-4-64" name="__codelineno-4-64" href="#__codelineno-4-64"></a>        <span class="s2">&quot;reference&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="__span-4-65"><a id="__codelineno-4-65" name="__codelineno-4-65" href="#__codelineno-4-65"></a>            <span class="s2">&quot;Lost in the middle is the phenomenon where LLMs give less attention to information &quot;</span>
+</span><span id="__span-4-66"><a id="__codelineno-4-66" name="__codelineno-4-66" href="#__codelineno-4-66"></a>            <span class="s2">&quot;placed in the middle of a long context window compared to the beginning and end. &quot;</span>
+</span><span id="__span-4-67"><a id="__codelineno-4-67" name="__codelineno-4-67" href="#__codelineno-4-67"></a>            <span class="s2">&quot;It occurs when the relevant signal is buried in a large amount of surrounding text. &quot;</span>
+</span><span id="__span-4-68"><a id="__codelineno-4-68" name="__codelineno-4-68" href="#__codelineno-4-68"></a>            <span class="s2">&quot;Mitigations include: placing the most important information at the start or end of &quot;</span>
+</span><span id="__span-4-69"><a id="__codelineno-4-69" name="__codelineno-4-69" href="#__codelineno-4-69"></a>            <span class="s2">&quot;the context, using RAG to retrieve only the most relevant chunks, and reducing context &quot;</span>
+</span><span id="__span-4-70"><a id="__codelineno-4-70" name="__codelineno-4-70" href="#__codelineno-4-70"></a>            <span class="s2">&quot;size so the signal-to-noise ratio is higher.&quot;</span>
+</span><span id="__span-4-71"><a id="__codelineno-4-71" name="__codelineno-4-71" href="#__codelineno-4-71"></a>        <span class="p">),</span>
+</span><span id="__span-4-72"><a id="__codelineno-4-72" name="__codelineno-4-72" href="#__codelineno-4-72"></a>    <span class="p">},</span>
+</span><span id="__span-4-73"><a id="__codelineno-4-73" name="__codelineno-4-73" href="#__codelineno-4-73"></a>    <span class="p">{</span>
+</span><span id="__span-4-74"><a id="__codelineno-4-74" name="__codelineno-4-74" href="#__codelineno-4-74"></a>        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;fund_03&quot;</span><span class="p">,</span>
+</span><span id="__span-4-75"><a id="__codelineno-4-75" name="__codelineno-4-75" href="#__codelineno-4-75"></a>        <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="s2">&quot;fundamentals&quot;</span><span class="p">,</span>
+</span><span id="__span-4-76"><a id="__codelineno-4-76" name="__codelineno-4-76" href="#__codelineno-4-76"></a>        <span class="s2">&quot;difficulty&quot;</span><span class="p">:</span> <span class="s2">&quot;easy&quot;</span><span class="p">,</span>
+</span><span id="__span-4-77"><a id="__codelineno-4-77" name="__codelineno-4-77" href="#__codelineno-4-77"></a>        <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="s2">&quot;What does temperature control in an LLM and what happens at temperature=0 vs temperature=1?&quot;</span><span class="p">,</span>
+</span><span id="__span-4-78"><a id="__codelineno-4-78" name="__codelineno-4-78" href="#__codelineno-4-78"></a>        <span class="s2">&quot;reference&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="__span-4-79"><a id="__codelineno-4-79" name="__codelineno-4-79" href="#__codelineno-4-79"></a>            <span class="s2">&quot;Temperature controls the randomness of the model&#39;s output by scaling the probability &quot;</span>
+</span><span id="__span-4-80"><a id="__codelineno-4-80" name="__codelineno-4-80" href="#__codelineno-4-80"></a>            <span class="s2">&quot;distribution over possible next tokens before sampling. &quot;</span>
+</span><span id="__span-4-81"><a id="__codelineno-4-81" name="__codelineno-4-81" href="#__codelineno-4-81"></a>            <span class="s2">&quot;At temperature=0, the model always picks the highest-probability token — output is &quot;</span>
+</span><span id="__span-4-82"><a id="__codelineno-4-82" name="__codelineno-4-82" href="#__codelineno-4-82"></a>            <span class="s2">&quot;deterministic and consistent but less creative. &quot;</span>
+</span><span id="__span-4-83"><a id="__codelineno-4-83" name="__codelineno-4-83" href="#__codelineno-4-83"></a>            <span class="s2">&quot;At temperature=1, the model samples from the unmodified distribution — output is more &quot;</span>
+</span><span id="__span-4-84"><a id="__codelineno-4-84" name="__codelineno-4-84" href="#__codelineno-4-84"></a>            <span class="s2">&quot;varied and creative but less predictable. &quot;</span>
+</span><span id="__span-4-85"><a id="__codelineno-4-85" name="__codelineno-4-85" href="#__codelineno-4-85"></a>            <span class="s2">&quot;Values above 1 amplify randomness further.&quot;</span>
+</span><span id="__span-4-86"><a id="__codelineno-4-86" name="__codelineno-4-86" href="#__codelineno-4-86"></a>        <span class="p">),</span>
+</span><span id="__span-4-87"><a id="__codelineno-4-87" name="__codelineno-4-87" href="#__codelineno-4-87"></a>    <span class="p">},</span>
+</span><span id="__span-4-88"><a id="__codelineno-4-88" name="__codelineno-4-88" href="#__codelineno-4-88"></a>    <span class="c1"># --- Agent Architecture ---</span>
+</span><span id="__span-4-89"><a id="__codelineno-4-89" name="__codelineno-4-89" href="#__codelineno-4-89"></a>    <span class="p">{</span>
+</span><span id="__span-4-90"><a id="__codelineno-4-90" name="__codelineno-4-90" href="#__codelineno-4-90"></a>        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;agent_01&quot;</span><span class="p">,</span>
+</span><span id="__span-4-91"><a id="__codelineno-4-91" name="__codelineno-4-91" href="#__codelineno-4-91"></a>        <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="s2">&quot;agent_architecture&quot;</span><span class="p">,</span>
+</span><span id="__span-4-92"><a id="__codelineno-4-92" name="__codelineno-4-92" href="#__codelineno-4-92"></a>        <span class="s2">&quot;difficulty&quot;</span><span class="p">:</span> <span class="s2">&quot;medium&quot;</span><span class="p">,</span>
+</span><span id="__span-4-93"><a id="__codelineno-4-93" name="__codelineno-4-93" href="#__codelineno-4-93"></a>        <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="__span-4-94"><a id="__codelineno-4-94" name="__codelineno-4-94" href="#__codelineno-4-94"></a>            <span class="s2">&quot;Describe the ReAct pattern. What problem does it solve and &quot;</span>
+</span><span id="__span-4-95"><a id="__codelineno-4-95" name="__codelineno-4-95" href="#__codelineno-4-95"></a>            <span class="s2">&quot;what are the four components of each step in the loop?&quot;</span>
+</span><span id="__span-4-96"><a id="__codelineno-4-96" name="__codelineno-4-96" href="#__codelineno-4-96"></a>        <span class="p">),</span>
+</span><span id="__span-4-97"><a id="__codelineno-4-97" name="__codelineno-4-97" href="#__codelineno-4-97"></a>        <span class="s2">&quot;reference&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="__span-4-98"><a id="__codelineno-4-98" name="__codelineno-4-98" href="#__codelineno-4-98"></a>            <span class="s2">&quot;ReAct (Reasoning + Acting) is a pattern for building LLM agents that interleaves &quot;</span>
+</span><span id="__span-4-99"><a id="__codelineno-4-99" name="__codelineno-4-99" href="#__codelineno-4-99"></a>            <span class="s2">&quot;reasoning traces with tool calls. It solves the problem of agents taking actions &quot;</span>
+</span><span id="__span-4-100"><a id="__codelineno-4-100" name="__codelineno-4-100" href="#__codelineno-4-100"></a>            <span class="s2">&quot;without explaining why, making them hard to debug and prone to errors. &quot;</span>
+</span><span id="__span-4-101"><a id="__codelineno-4-101" name="__codelineno-4-101" href="#__codelineno-4-101"></a>            <span class="s2">&quot;The four components per step are: Thought (the model&#39;s reasoning), &quot;</span>
+</span><span id="__span-4-102"><a id="__codelineno-4-102" name="__codelineno-4-102" href="#__codelineno-4-102"></a>            <span class="s2">&quot;Action (the tool call), Observation (the tool&#39;s output), and the next Thought &quot;</span>
+</span><span id="__span-4-103"><a id="__codelineno-4-103" name="__codelineno-4-103" href="#__codelineno-4-103"></a>            <span class="s2">&quot;which decides whether to call another tool or produce a Final Answer.&quot;</span>
+</span><span id="__span-4-104"><a id="__codelineno-4-104" name="__codelineno-4-104" href="#__codelineno-4-104"></a>        <span class="p">),</span>
+</span><span id="__span-4-105"><a id="__codelineno-4-105" name="__codelineno-4-105" href="#__codelineno-4-105"></a>    <span class="p">},</span>
+</span><span id="__span-4-106"><a id="__codelineno-4-106" name="__codelineno-4-106" href="#__codelineno-4-106"></a>    <span class="p">{</span>
+</span><span id="__span-4-107"><a id="__codelineno-4-107" name="__codelineno-4-107" href="#__codelineno-4-107"></a>        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;agent_02&quot;</span><span class="p">,</span>
+</span><span id="__span-4-108"><a id="__codelineno-4-108" name="__codelineno-4-108" href="#__codelineno-4-108"></a>        <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="s2">&quot;agent_architecture&quot;</span><span class="p">,</span>
+</span><span id="__span-4-109"><a id="__codelineno-4-109" name="__codelineno-4-109" href="#__codelineno-4-109"></a>        <span class="s2">&quot;difficulty&quot;</span><span class="p">:</span> <span class="s2">&quot;hard&quot;</span><span class="p">,</span>
+</span><span id="__span-4-110"><a id="__codelineno-4-110" name="__codelineno-4-110" href="#__codelineno-4-110"></a>        <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="__span-4-111"><a id="__codelineno-4-111" name="__codelineno-4-111" href="#__codelineno-4-111"></a>            <span class="s2">&quot;Why is a stop sequence critical when building a text-based ReAct agent? &quot;</span>
+</span><span id="__span-4-112"><a id="__codelineno-4-112" name="__codelineno-4-112" href="#__codelineno-4-112"></a>            <span class="s2">&quot;What goes wrong without one, and what should the stop sequence be set to?&quot;</span>
+</span><span id="__span-4-113"><a id="__codelineno-4-113" name="__codelineno-4-113" href="#__codelineno-4-113"></a>        <span class="p">),</span>
+</span><span id="__span-4-114"><a id="__codelineno-4-114" name="__codelineno-4-114" href="#__codelineno-4-114"></a>        <span class="s2">&quot;reference&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="__span-4-115"><a id="__codelineno-4-115" name="__codelineno-4-115" href="#__codelineno-4-115"></a>            <span class="s2">&quot;Without a stop sequence, the model continues generating text past the Action line &quot;</span>
+</span><span id="__span-4-116"><a id="__codelineno-4-116" name="__codelineno-4-116" href="#__codelineno-4-116"></a>            <span class="s2">&quot;and hallucinates the Observation — it invents the tool&#39;s output instead of waiting &quot;</span>
+</span><span id="__span-4-117"><a id="__codelineno-4-117" name="__codelineno-4-117" href="#__codelineno-4-117"></a>            <span class="s2">&quot;for the real result. The stop sequence should be set to the string that begins an &quot;</span>
+</span><span id="__span-4-118"><a id="__codelineno-4-118" name="__codelineno-4-118" href="#__codelineno-4-118"></a>            <span class="s2">&quot;Observation in the format (typically &#39;</span><span class="se">\\</span><span class="s2">nObservation:&#39;). When the model generates &quot;</span>
+</span><span id="__span-4-119"><a id="__codelineno-4-119" name="__codelineno-4-119" href="#__codelineno-4-119"></a>            <span class="s2">&quot;an Action, it stops before writing the Observation, allowing the code to execute &quot;</span>
+</span><span id="__span-4-120"><a id="__codelineno-4-120" name="__codelineno-4-120" href="#__codelineno-4-120"></a>            <span class="s2">&quot;the real tool and inject the actual result.&quot;</span>
+</span><span id="__span-4-121"><a id="__codelineno-4-121" name="__codelineno-4-121" href="#__codelineno-4-121"></a>        <span class="p">),</span>
+</span><span id="__span-4-122"><a id="__codelineno-4-122" name="__codelineno-4-122" href="#__codelineno-4-122"></a>    <span class="p">},</span>
+</span><span id="__span-4-123"><a id="__codelineno-4-123" name="__codelineno-4-123" href="#__codelineno-4-123"></a>    <span class="p">{</span>
+</span><span id="__span-4-124"><a id="__codelineno-4-124" name="__codelineno-4-124" href="#__codelineno-4-124"></a>        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;agent_03&quot;</span><span class="p">,</span>
+</span><span id="__span-4-125"><a id="__codelineno-4-125" name="__codelineno-4-125" href="#__codelineno-4-125"></a>        <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="s2">&quot;agent_architecture&quot;</span><span class="p">,</span>
+</span><span id="__span-4-126"><a id="__codelineno-4-126" name="__codelineno-4-126" href="#__codelineno-4-126"></a>        <span class="s2">&quot;difficulty&quot;</span><span class="p">:</span> <span class="s2">&quot;medium&quot;</span><span class="p">,</span>
+</span><span id="__span-4-127"><a id="__codelineno-4-127" name="__codelineno-4-127" href="#__codelineno-4-127"></a>        <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="__span-4-128"><a id="__codelineno-4-128" name="__codelineno-4-128" href="#__codelineno-4-128"></a>            <span class="s2">&quot;What is the practical difference between a pipeline and an agent when a primary &quot;</span>
+</span><span id="__span-4-129"><a id="__codelineno-4-129" name="__codelineno-4-129" href="#__codelineno-4-129"></a>            <span class="s2">&quot;data source fails? Give a concrete example.&quot;</span>
+</span><span id="__span-4-130"><a id="__codelineno-4-130" name="__codelineno-4-130" href="#__codelineno-4-130"></a>        <span class="p">),</span>
+</span><span id="__span-4-131"><a id="__codelineno-4-131" name="__codelineno-4-131" href="#__codelineno-4-131"></a>        <span class="s2">&quot;reference&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="__span-4-132"><a id="__codelineno-4-132" name="__codelineno-4-132" href="#__codelineno-4-132"></a>            <span class="s2">&quot;A pipeline handles failure only if the developer anticipated and coded that specific &quot;</span>
+</span><span id="__span-4-133"><a id="__codelineno-4-133" name="__codelineno-4-133" href="#__codelineno-4-133"></a>            <span class="s2">&quot;failure path. If the file is missing and the pipeline has no fallback, it fails. &quot;</span>
+</span><span id="__span-4-134"><a id="__codelineno-4-134" name="__codelineno-4-134" href="#__codelineno-4-134"></a>            <span class="s2">&quot;An agent observes the error from the tool call and reasons about what to do next — &quot;</span>
+</span><span id="__span-4-135"><a id="__codelineno-4-135" name="__codelineno-4-135" href="#__codelineno-4-135"></a>            <span class="s2">&quot;it can try a fallback tool, ask for clarification, or report failure honestly, &quot;</span>
+</span><span id="__span-4-136"><a id="__codelineno-4-136" name="__codelineno-4-136" href="#__codelineno-4-136"></a>            <span class="s2">&quot;without any pre-written fallback code. &quot;</span>
+</span><span id="__span-4-137"><a id="__codelineno-4-137" name="__codelineno-4-137" href="#__codelineno-4-137"></a>            <span class="s2">&quot;Example: a pipeline that reads a price from a file with a hardcoded database fallback &quot;</span>
+</span><span id="__span-4-138"><a id="__codelineno-4-138" name="__codelineno-4-138" href="#__codelineno-4-138"></a>            <span class="s2">&quot;handles exactly those two scenarios. An agent with both tools described in its system &quot;</span>
+</span><span id="__span-4-139"><a id="__codelineno-4-139" name="__codelineno-4-139" href="#__codelineno-4-139"></a>            <span class="s2">&quot;prompt handles any combination of failures dynamically.&quot;</span>
+</span><span id="__span-4-140"><a id="__codelineno-4-140" name="__codelineno-4-140" href="#__codelineno-4-140"></a>        <span class="p">),</span>
+</span><span id="__span-4-141"><a id="__codelineno-4-141" name="__codelineno-4-141" href="#__codelineno-4-141"></a>    <span class="p">},</span>
+</span><span id="__span-4-142"><a id="__codelineno-4-142" name="__codelineno-4-142" href="#__codelineno-4-142"></a>    <span class="c1"># --- Edge AI ---</span>
+</span><span id="__span-4-143"><a id="__codelineno-4-143" name="__codelineno-4-143" href="#__codelineno-4-143"></a>    <span class="p">{</span>
+</span><span id="__span-4-144"><a id="__codelineno-4-144" name="__codelineno-4-144" href="#__codelineno-4-144"></a>        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;edge_01&quot;</span><span class="p">,</span>
+</span><span id="__span-4-145"><a id="__codelineno-4-145" name="__codelineno-4-145" href="#__codelineno-4-145"></a>        <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="s2">&quot;edge_ai&quot;</span><span class="p">,</span>
+</span><span id="__span-4-146"><a id="__codelineno-4-146" name="__codelineno-4-146" href="#__codelineno-4-146"></a>        <span class="s2">&quot;difficulty&quot;</span><span class="p">:</span> <span class="s2">&quot;medium&quot;</span><span class="p">,</span>
+</span><span id="__span-4-147"><a id="__codelineno-4-147" name="__codelineno-4-147" href="#__codelineno-4-147"></a>        <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="__span-4-148"><a id="__codelineno-4-148" name="__codelineno-4-148" href="#__codelineno-4-148"></a>            <span class="s2">&quot;Name three scenarios where running an LLM locally is preferable to calling a cloud API, &quot;</span>
+</span><span id="__span-4-149"><a id="__codelineno-4-149" name="__codelineno-4-149" href="#__codelineno-4-149"></a>            <span class="s2">&quot;and explain why for each.&quot;</span>
+</span><span id="__span-4-150"><a id="__codelineno-4-150" name="__codelineno-4-150" href="#__codelineno-4-150"></a>        <span class="p">),</span>
+</span><span id="__span-4-151"><a id="__codelineno-4-151" name="__codelineno-4-151" href="#__codelineno-4-151"></a>        <span class="s2">&quot;reference&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="__span-4-152"><a id="__codelineno-4-152" name="__codelineno-4-152" href="#__codelineno-4-152"></a>            <span class="s2">&quot;1. Regulated data (healthcare, finance, legal): data cannot legally leave the device &quot;</span>
+</span><span id="__span-4-153"><a id="__codelineno-4-153" name="__codelineno-4-153" href="#__codelineno-4-153"></a>            <span class="s2">&quot;or organisation. Local inference eliminates the data transfer risk. &quot;</span>
+</span><span id="__span-4-154"><a id="__codelineno-4-154" name="__codelineno-4-154" href="#__codelineno-4-154"></a>            <span class="s2">&quot;2. High-volume batch processing: per-token cloud costs become the dominant expense &quot;</span>
+</span><span id="__span-4-155"><a id="__codelineno-4-155" name="__codelineno-4-155" href="#__codelineno-4-155"></a>            <span class="s2">&quot;at scale. Local inference has near-zero marginal cost after hardware. &quot;</span>
+</span><span id="__span-4-156"><a id="__codelineno-4-156" name="__codelineno-4-156" href="#__codelineno-4-156"></a>            <span class="s2">&quot;3. Offline or air-gapped environments: field devices, industrial systems, and &quot;</span>
+</span><span id="__span-4-157"><a id="__codelineno-4-157" name="__codelineno-4-157" href="#__codelineno-4-157"></a>            <span class="s2">&quot;government infrastructure often have no reliable internet. Local models run without connectivity.&quot;</span>
+</span><span id="__span-4-158"><a id="__codelineno-4-158" name="__codelineno-4-158" href="#__codelineno-4-158"></a>        <span class="p">),</span>
+</span><span id="__span-4-159"><a id="__codelineno-4-159" name="__codelineno-4-159" href="#__codelineno-4-159"></a>    <span class="p">},</span>
+</span><span id="__span-4-160"><a id="__codelineno-4-160" name="__codelineno-4-160" href="#__codelineno-4-160"></a>    <span class="p">{</span>
+</span><span id="__span-4-161"><a id="__codelineno-4-161" name="__codelineno-4-161" href="#__codelineno-4-161"></a>        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;edge_02&quot;</span><span class="p">,</span>
+</span><span id="__span-4-162"><a id="__codelineno-4-162" name="__codelineno-4-162" href="#__codelineno-4-162"></a>        <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="s2">&quot;edge_ai&quot;</span><span class="p">,</span>
+</span><span id="__span-4-163"><a id="__codelineno-4-163" name="__codelineno-4-163" href="#__codelineno-4-163"></a>        <span class="s2">&quot;difficulty&quot;</span><span class="p">:</span> <span class="s2">&quot;medium&quot;</span><span class="p">,</span>
+</span><span id="__span-4-164"><a id="__codelineno-4-164" name="__codelineno-4-164" href="#__codelineno-4-164"></a>        <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="__span-4-165"><a id="__codelineno-4-165" name="__codelineno-4-165" href="#__codelineno-4-165"></a>            <span class="s2">&quot;In the Gemma 4 E2B vs 26B benchmark on Apple M4, which task types showed &quot;</span>
+</span><span id="__span-4-166"><a id="__codelineno-4-166" name="__codelineno-4-166" href="#__codelineno-4-166"></a>            <span class="s2">&quot;identical quality between the two models, and which showed a meaningful gap? &quot;</span>
+</span><span id="__span-4-167"><a id="__codelineno-4-167" name="__codelineno-4-167" href="#__codelineno-4-167"></a>            <span class="s2">&quot;What routing decision does this suggest?&quot;</span>
+</span><span id="__span-4-168"><a id="__codelineno-4-168" name="__codelineno-4-168" href="#__codelineno-4-168"></a>        <span class="p">),</span>
+</span><span id="__span-4-169"><a id="__codelineno-4-169" name="__codelineno-4-169" href="#__codelineno-4-169"></a>        <span class="s2">&quot;reference&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="__span-4-170"><a id="__codelineno-4-170" name="__codelineno-4-170" href="#__codelineno-4-170"></a>            <span class="s2">&quot;Identical quality (5/5 both): factual recall and summarisation. &quot;</span>
+</span><span id="__span-4-171"><a id="__codelineno-4-171" name="__codelineno-4-171" href="#__codelineno-4-171"></a>            <span class="s2">&quot;Meaningful gap: reasoning tasks (E2B 4/5, 26B 4.5/5) and code instruction-following &quot;</span>
+</span><span id="__span-4-172"><a id="__codelineno-4-172" name="__codelineno-4-172" href="#__codelineno-4-172"></a>            <span class="s2">&quot;(E2B verbose and ignored format constraints, 26B concise and compliant). &quot;</span>
+</span><span id="__span-4-173"><a id="__codelineno-4-173" name="__codelineno-4-173" href="#__codelineno-4-173"></a>            <span class="s2">&quot;Routing decision: always use E2B for factual and summarisation tasks (2.5x faster, &quot;</span>
+</span><span id="__span-4-174"><a id="__codelineno-4-174" name="__codelineno-4-174" href="#__codelineno-4-174"></a>            <span class="s2">&quot;same quality). Use 26B for reasoning tasks requiring precision and code tasks &quot;</span>
+</span><span id="__span-4-175"><a id="__codelineno-4-175" name="__codelineno-4-175" href="#__codelineno-4-175"></a>            <span class="s2">&quot;where format compliance matters.&quot;</span>
+</span><span id="__span-4-176"><a id="__codelineno-4-176" name="__codelineno-4-176" href="#__codelineno-4-176"></a>        <span class="p">),</span>
+</span><span id="__span-4-177"><a id="__codelineno-4-177" name="__codelineno-4-177" href="#__codelineno-4-177"></a>    <span class="p">},</span>
+</span><span id="__span-4-178"><a id="__codelineno-4-178" name="__codelineno-4-178" href="#__codelineno-4-178"></a>    <span class="c1"># --- Evaluation ---</span>
+</span><span id="__span-4-179"><a id="__codelineno-4-179" name="__codelineno-4-179" href="#__codelineno-4-179"></a>    <span class="p">{</span>
+</span><span id="__span-4-180"><a id="__codelineno-4-180" name="__codelineno-4-180" href="#__codelineno-4-180"></a>        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;eval_01&quot;</span><span class="p">,</span>
+</span><span id="__span-4-181"><a id="__codelineno-4-181" name="__codelineno-4-181" href="#__codelineno-4-181"></a>        <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="s2">&quot;evaluation&quot;</span><span class="p">,</span>
+</span><span id="__span-4-182"><a id="__codelineno-4-182" name="__codelineno-4-182" href="#__codelineno-4-182"></a>        <span class="s2">&quot;difficulty&quot;</span><span class="p">:</span> <span class="s2">&quot;medium&quot;</span><span class="p">,</span>
+</span><span id="__span-4-183"><a id="__codelineno-4-183" name="__codelineno-4-183" href="#__codelineno-4-183"></a>        <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="__span-4-184"><a id="__codelineno-4-184" name="__codelineno-4-184" href="#__codelineno-4-184"></a>            <span class="s2">&quot;What is verbosity bias in LLM evaluation, and how does it affect benchmark results &quot;</span>
+</span><span id="__span-4-185"><a id="__codelineno-4-185" name="__codelineno-4-185" href="#__codelineno-4-185"></a>            <span class="s2">&quot;if the judge prompt does not account for it?&quot;</span>
+</span><span id="__span-4-186"><a id="__codelineno-4-186" name="__codelineno-4-186" href="#__codelineno-4-186"></a>        <span class="p">),</span>
+</span><span id="__span-4-187"><a id="__codelineno-4-187" name="__codelineno-4-187" href="#__codelineno-4-187"></a>        <span class="s2">&quot;reference&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="__span-4-188"><a id="__codelineno-4-188" name="__codelineno-4-188" href="#__codelineno-4-188"></a>            <span class="s2">&quot;Verbosity bias is the tendency of evaluators — human or model — to rate longer, &quot;</span>
+</span><span id="__span-4-189"><a id="__codelineno-4-189" name="__codelineno-4-189" href="#__codelineno-4-189"></a>            <span class="s2">&quot;more detailed responses higher, regardless of whether the extra length adds accuracy &quot;</span>
+</span><span id="__span-4-190"><a id="__codelineno-4-190" name="__codelineno-4-190" href="#__codelineno-4-190"></a>            <span class="s2">&quot;or value. If the judge prompt does not explicitly state that concise correct answers &quot;</span>
+</span><span id="__span-4-191"><a id="__codelineno-4-191" name="__codelineno-4-191" href="#__codelineno-4-191"></a>            <span class="s2">&quot;score as high as verbose correct answers, the benchmark will systematically reward &quot;</span>
+</span><span id="__span-4-192"><a id="__codelineno-4-192" name="__codelineno-4-192" href="#__codelineno-4-192"></a>            <span class="s2">&quot;models that pad their outputs and penalise models that are precise and brief. &quot;</span>
+</span><span id="__span-4-193"><a id="__codelineno-4-193" name="__codelineno-4-193" href="#__codelineno-4-193"></a>            <span class="s2">&quot;This leads to selecting for verbose models even when brevity is preferred.&quot;</span>
+</span><span id="__span-4-194"><a id="__codelineno-4-194" name="__codelineno-4-194" href="#__codelineno-4-194"></a>        <span class="p">),</span>
+</span><span id="__span-4-195"><a id="__codelineno-4-195" name="__codelineno-4-195" href="#__codelineno-4-195"></a>    <span class="p">},</span>
+</span><span id="__span-4-196"><a id="__codelineno-4-196" name="__codelineno-4-196" href="#__codelineno-4-196"></a>    <span class="p">{</span>
+</span><span id="__span-4-197"><a id="__codelineno-4-197" name="__codelineno-4-197" href="#__codelineno-4-197"></a>        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;eval_02&quot;</span><span class="p">,</span>
+</span><span id="__span-4-198"><a id="__codelineno-4-198" name="__codelineno-4-198" href="#__codelineno-4-198"></a>        <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="s2">&quot;evaluation&quot;</span><span class="p">,</span>
+</span><span id="__span-4-199"><a id="__codelineno-4-199" name="__codelineno-4-199" href="#__codelineno-4-199"></a>        <span class="s2">&quot;difficulty&quot;</span><span class="p">:</span> <span class="s2">&quot;hard&quot;</span><span class="p">,</span>
+</span><span id="__span-4-200"><a id="__codelineno-4-200" name="__codelineno-4-200" href="#__codelineno-4-200"></a>        <span class="s2">&quot;question&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="__span-4-201"><a id="__codelineno-4-201" name="__codelineno-4-201" href="#__codelineno-4-201"></a>            <span class="s2">&quot;Why should benchmark questions be written before running the model, &quot;</span>
+</span><span id="__span-4-202"><a id="__codelineno-4-202" name="__codelineno-4-202" href="#__codelineno-4-202"></a>            <span class="s2">&quot;and what bias is introduced if you write questions after seeing model outputs?&quot;</span>
+</span><span id="__span-4-203"><a id="__codelineno-4-203" name="__codelineno-4-203" href="#__codelineno-4-203"></a>        <span class="p">),</span>
+</span><span id="__span-4-204"><a id="__codelineno-4-204" name="__codelineno-4-204" href="#__codelineno-4-204"></a>        <span class="s2">&quot;reference&quot;</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="__span-4-205"><a id="__codelineno-4-205" name="__codelineno-4-205" href="#__codelineno-4-205"></a>            <span class="s2">&quot;If questions are written after seeing model outputs, the question writer unconsciously &quot;</span>
+</span><span id="__span-4-206"><a id="__codelineno-4-206" name="__codelineno-4-206" href="#__codelineno-4-206"></a>            <span class="s2">&quot;selects or frames questions that the model answered well — because those outputs are &quot;</span>
+</span><span id="__span-4-207"><a id="__codelineno-4-207" name="__codelineno-4-207" href="#__codelineno-4-207"></a>            <span class="s2">&quot;top of mind and seem &#39;natural.&#39; This inflates benchmark scores because the test set &quot;</span>
+</span><span id="__span-4-208"><a id="__codelineno-4-208" name="__codelineno-4-208" href="#__codelineno-4-208"></a>            <span class="s2">&quot;no longer represents the actual difficulty distribution of real user requests. &quot;</span>
+</span><span id="__span-4-209"><a id="__codelineno-4-209" name="__codelineno-4-209" href="#__codelineno-4-209"></a>            <span class="s2">&quot;The benchmark measures how well the model answers questions derived from its own &quot;</span>
+</span><span id="__span-4-210"><a id="__codelineno-4-210" name="__codelineno-4-210" href="#__codelineno-4-210"></a>            <span class="s2">&quot;outputs, not how well it handles the full range of user intent. &quot;</span>
+</span><span id="__span-4-211"><a id="__codelineno-4-211" name="__codelineno-4-211" href="#__codelineno-4-211"></a>            <span class="s2">&quot;Writing questions before running the model ensures the test set is independent of &quot;</span>
+</span><span id="__span-4-212"><a id="__codelineno-4-212" name="__codelineno-4-212" href="#__codelineno-4-212"></a>            <span class="s2">&quot;what the model can or cannot answer.&quot;</span>
+</span><span id="__span-4-213"><a id="__codelineno-4-213" name="__codelineno-4-213" href="#__codelineno-4-213"></a>        <span class="p">),</span>
+</span><span id="__span-4-214"><a id="__codelineno-4-214" name="__codelineno-4-214" href="#__codelineno-4-214"></a>    <span class="p">},</span>
+</span><span id="__span-4-215"><a id="__codelineno-4-215" name="__codelineno-4-215" href="#__codelineno-4-215"></a><span class="p">]</span>
+</span><span id="__span-4-216"><a id="__codelineno-4-216" name="__codelineno-4-216" href="#__codelineno-4-216"></a>
+</span><span id="__span-4-217"><a id="__codelineno-4-217" name="__codelineno-4-217" href="#__codelineno-4-217"></a>
+</span><span id="__span-4-218"><a id="__codelineno-4-218" name="__codelineno-4-218" href="#__codelineno-4-218"></a><span class="c1"># -------------------------------------------------------------------</span>
+</span><span id="__span-4-219"><a id="__codelineno-4-219" name="__codelineno-4-219" href="#__codelineno-4-219"></a><span class="c1"># MODEL UNDER TEST — single call per question</span>
+</span><span id="__span-4-220"><a id="__codelineno-4-220" name="__codelineno-4-220" href="#__codelineno-4-220"></a><span class="c1"># -------------------------------------------------------------------</span>
+</span><span id="__span-4-221"><a id="__codelineno-4-221" name="__codelineno-4-221" href="#__codelineno-4-221"></a>
+</span><span id="__span-4-222"><a id="__codelineno-4-222" name="__codelineno-4-222" href="#__codelineno-4-222"></a><span class="k">def</span><span class="w"> </span><span class="nf">ask_model</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+</span><span id="__span-4-223"><a id="__codelineno-4-223" name="__codelineno-4-223" href="#__codelineno-4-223"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns (response_text, tokens_per_sec).&quot;&quot;&quot;</span>
+</span><span id="__span-4-224"><a id="__codelineno-4-224" name="__codelineno-4-224" href="#__codelineno-4-224"></a>    <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-4-225"><a id="__codelineno-4-225" name="__codelineno-4-225" href="#__codelineno-4-225"></a>        <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">MODEL_UNDER_TEST</span><span class="p">,</span>
+</span><span id="__span-4-226"><a id="__codelineno-4-226" name="__codelineno-4-226" href="#__codelineno-4-226"></a>        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">question</span><span class="p">}],</span>
+</span><span id="__span-4-227"><a id="__codelineno-4-227" name="__codelineno-4-227" href="#__codelineno-4-227"></a>        <span class="s2">&quot;stream&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-4-228"><a id="__codelineno-4-228" name="__codelineno-4-228" href="#__codelineno-4-228"></a>        <span class="s2">&quot;think&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-4-229"><a id="__codelineno-4-229" name="__codelineno-4-229" href="#__codelineno-4-229"></a>        <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;num_predict&quot;</span><span class="p">:</span> <span class="mi">600</span><span class="p">,</span> <span class="s2">&quot;num_ctx&quot;</span><span class="p">:</span> <span class="mi">4096</span><span class="p">},</span>
+</span><span id="__span-4-230"><a id="__codelineno-4-230" name="__codelineno-4-230" href="#__codelineno-4-230"></a>    <span class="p">}</span>
+</span><span id="__span-4-231"><a id="__codelineno-4-231" name="__codelineno-4-231" href="#__codelineno-4-231"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">OLLAMA_URL</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+</span><span id="__span-4-232"><a id="__codelineno-4-232" name="__codelineno-4-232" href="#__codelineno-4-232"></a>    <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+</span><span id="__span-4-233"><a id="__codelineno-4-233" name="__codelineno-4-233" href="#__codelineno-4-233"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</span><span id="__span-4-234"><a id="__codelineno-4-234" name="__codelineno-4-234" href="#__codelineno-4-234"></a>    <span class="n">text</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">][</span><span class="s2">&quot;content&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span><span id="__span-4-235"><a id="__codelineno-4-235" name="__codelineno-4-235" href="#__codelineno-4-235"></a>    <span class="n">eval_count</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eval_count&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span><span id="__span-4-236"><a id="__codelineno-4-236" name="__codelineno-4-236" href="#__codelineno-4-236"></a>    <span class="n">eval_ms</span>    <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eval_duration&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1_000_000</span>
+</span><span id="__span-4-237"><a id="__codelineno-4-237" name="__codelineno-4-237" href="#__codelineno-4-237"></a>    <span class="n">tps</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">eval_count</span> <span class="o">/</span> <span class="p">(</span><span class="n">eval_ms</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">eval_ms</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+</span><span id="__span-4-238"><a id="__codelineno-4-238" name="__codelineno-4-238" href="#__codelineno-4-238"></a>    <span class="k">return</span> <span class="n">text</span><span class="p">,</span> <span class="n">tps</span>
+</span><span id="__span-4-239"><a id="__codelineno-4-239" name="__codelineno-4-239" href="#__codelineno-4-239"></a>
+</span><span id="__span-4-240"><a id="__codelineno-4-240" name="__codelineno-4-240" href="#__codelineno-4-240"></a>
+</span><span id="__span-4-241"><a id="__codelineno-4-241" name="__codelineno-4-241" href="#__codelineno-4-241"></a><span class="c1"># -------------------------------------------------------------------</span>
+</span><span id="__span-4-242"><a id="__codelineno-4-242" name="__codelineno-4-242" href="#__codelineno-4-242"></a><span class="c1"># HARNESS</span>
+</span><span id="__span-4-243"><a id="__codelineno-4-243" name="__codelineno-4-243" href="#__codelineno-4-243"></a><span class="c1"># -------------------------------------------------------------------</span>
+</span><span id="__span-4-244"><a id="__codelineno-4-244" name="__codelineno-4-244" href="#__codelineno-4-244"></a>
+</span><span id="__span-4-245"><a id="__codelineno-4-245" name="__codelineno-4-245" href="#__codelineno-4-245"></a><span class="k">def</span><span class="w"> </span><span class="nf">run_benchmark</span><span class="p">(</span><span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="__span-4-246"><a id="__codelineno-4-246" name="__codelineno-4-246" href="#__codelineno-4-246"></a>    <span class="n">results</span>     <span class="o">=</span> <span class="p">[]</span>
+</span><span id="__span-4-247"><a id="__codelineno-4-247" name="__codelineno-4-247" href="#__codelineno-4-247"></a>    <span class="n">total_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span id="__span-4-248"><a id="__codelineno-4-248" name="__codelineno-4-248" href="#__codelineno-4-248"></a>
+</span><span id="__span-4-249"><a id="__codelineno-4-249" name="__codelineno-4-249" href="#__codelineno-4-249"></a>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">BENCHMARK</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+</span><span id="__span-4-250"><a id="__codelineno-4-250" name="__codelineno-4-250" href="#__codelineno-4-250"></a>        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+</span><span id="__span-4-251"><a id="__codelineno-4-251" name="__codelineno-4-251" href="#__codelineno-4-251"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">BENCHMARK</span><span class="p">)</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;difficulty&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</span><span id="__span-4-252"><a id="__codelineno-4-252" name="__codelineno-4-252" href="#__codelineno-4-252"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Q: </span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;question&#39;</span><span class="p">][:</span><span class="mi">80</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+</span><span id="__span-4-253"><a id="__codelineno-4-253" name="__codelineno-4-253" href="#__codelineno-4-253"></a>
+</span><span id="__span-4-254"><a id="__codelineno-4-254" name="__codelineno-4-254" href="#__codelineno-4-254"></a>        <span class="c1"># Step 1: model answers the question</span>
+</span><span id="__span-4-255"><a id="__codelineno-4-255" name="__codelineno-4-255" href="#__codelineno-4-255"></a>        <span class="n">response</span><span class="p">,</span> <span class="n">tps</span> <span class="o">=</span> <span class="n">ask_model</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">])</span>
+</span><span id="__span-4-256"><a id="__codelineno-4-256" name="__codelineno-4-256" href="#__codelineno-4-256"></a>        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+</span><span id="__span-4-257"><a id="__codelineno-4-257" name="__codelineno-4-257" href="#__codelineno-4-257"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  A: </span><span class="si">{</span><span class="n">response</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">... (</span><span class="si">{</span><span class="n">tps</span><span class="si">}</span><span class="s2"> tok/s)&quot;</span><span class="p">)</span>
+</span><span id="__span-4-258"><a id="__codelineno-4-258" name="__codelineno-4-258" href="#__codelineno-4-258"></a>
+</span><span id="__span-4-259"><a id="__codelineno-4-259" name="__codelineno-4-259" href="#__codelineno-4-259"></a>        <span class="c1"># Step 2: judge scores the answer</span>
+</span><span id="__span-4-260"><a id="__codelineno-4-260" name="__codelineno-4-260" href="#__codelineno-4-260"></a>        <span class="n">judgment</span> <span class="o">=</span> <span class="n">judge</span><span class="p">(</span>
+</span><span id="__span-4-261"><a id="__codelineno-4-261" name="__codelineno-4-261" href="#__codelineno-4-261"></a>            <span class="n">question</span><span class="o">=</span><span class="n">item</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">],</span>
+</span><span id="__span-4-262"><a id="__codelineno-4-262" name="__codelineno-4-262" href="#__codelineno-4-262"></a>            <span class="n">response</span><span class="o">=</span><span class="n">response</span><span class="p">,</span>
+</span><span id="__span-4-263"><a id="__codelineno-4-263" name="__codelineno-4-263" href="#__codelineno-4-263"></a>            <span class="n">reference</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;reference&quot;</span><span class="p">),</span>
+</span><span id="__span-4-264"><a id="__codelineno-4-264" name="__codelineno-4-264" href="#__codelineno-4-264"></a>        <span class="p">)</span>
+</span><span id="__span-4-265"><a id="__codelineno-4-265" name="__codelineno-4-265" href="#__codelineno-4-265"></a>        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+</span><span id="__span-4-266"><a id="__codelineno-4-266" name="__codelineno-4-266" href="#__codelineno-4-266"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Score: </span><span class="si">{</span><span class="n">judgment</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">/5 — </span><span class="si">{</span><span class="n">judgment</span><span class="p">[</span><span class="s1">&#39;reason&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-4-267"><a id="__codelineno-4-267" name="__codelineno-4-267" href="#__codelineno-4-267"></a>
+</span><span id="__span-4-268"><a id="__codelineno-4-268" name="__codelineno-4-268" href="#__codelineno-4-268"></a>        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+</span><span id="__span-4-269"><a id="__codelineno-4-269" name="__codelineno-4-269" href="#__codelineno-4-269"></a>            <span class="s2">&quot;id&quot;</span><span class="p">:</span>         <span class="n">item</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span>
+</span><span id="__span-4-270"><a id="__codelineno-4-270" name="__codelineno-4-270" href="#__codelineno-4-270"></a>            <span class="s2">&quot;category&quot;</span><span class="p">:</span>   <span class="n">item</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">],</span>
+</span><span id="__span-4-271"><a id="__codelineno-4-271" name="__codelineno-4-271" href="#__codelineno-4-271"></a>            <span class="s2">&quot;difficulty&quot;</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;difficulty&quot;</span><span class="p">],</span>
+</span><span id="__span-4-272"><a id="__codelineno-4-272" name="__codelineno-4-272" href="#__codelineno-4-272"></a>            <span class="s2">&quot;question&quot;</span><span class="p">:</span>   <span class="n">item</span><span class="p">[</span><span class="s2">&quot;question&quot;</span><span class="p">],</span>
+</span><span id="__span-4-273"><a id="__codelineno-4-273" name="__codelineno-4-273" href="#__codelineno-4-273"></a>            <span class="s2">&quot;response&quot;</span><span class="p">:</span>   <span class="n">response</span><span class="p">,</span>
+</span><span id="__span-4-274"><a id="__codelineno-4-274" name="__codelineno-4-274" href="#__codelineno-4-274"></a>            <span class="s2">&quot;reference&quot;</span><span class="p">:</span>  <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;reference&quot;</span><span class="p">),</span>
+</span><span id="__span-4-275"><a id="__codelineno-4-275" name="__codelineno-4-275" href="#__codelineno-4-275"></a>            <span class="s2">&quot;score&quot;</span><span class="p">:</span>      <span class="n">judgment</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">],</span>
+</span><span id="__span-4-276"><a id="__codelineno-4-276" name="__codelineno-4-276" href="#__codelineno-4-276"></a>            <span class="s2">&quot;reason&quot;</span><span class="p">:</span>     <span class="n">judgment</span><span class="p">[</span><span class="s2">&quot;reason&quot;</span><span class="p">],</span>
+</span><span id="__span-4-277"><a id="__codelineno-4-277" name="__codelineno-4-277" href="#__codelineno-4-277"></a>            <span class="s2">&quot;tps&quot;</span><span class="p">:</span>        <span class="n">tps</span><span class="p">,</span>
+</span><span id="__span-4-278"><a id="__codelineno-4-278" name="__codelineno-4-278" href="#__codelineno-4-278"></a>        <span class="p">})</span>
+</span><span id="__span-4-279"><a id="__codelineno-4-279" name="__codelineno-4-279" href="#__codelineno-4-279"></a>
+</span><span id="__span-4-280"><a id="__codelineno-4-280" name="__codelineno-4-280" href="#__codelineno-4-280"></a>    <span class="n">total_s</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">total_start</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-4-281"><a id="__codelineno-4-281" name="__codelineno-4-281" href="#__codelineno-4-281"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;results&quot;</span><span class="p">:</span> <span class="n">results</span><span class="p">,</span> <span class="s2">&quot;total_seconds&quot;</span><span class="p">:</span> <span class="n">total_s</span><span class="p">}</span>
+</span><span id="__span-4-282"><a id="__codelineno-4-282" name="__codelineno-4-282" href="#__codelineno-4-282"></a>
+</span><span id="__span-4-283"><a id="__codelineno-4-283" name="__codelineno-4-283" href="#__codelineno-4-283"></a>
+</span><span id="__span-4-284"><a id="__codelineno-4-284" name="__codelineno-4-284" href="#__codelineno-4-284"></a><span class="k">def</span><span class="w"> </span><span class="nf">print_report</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+</span><span id="__span-4-285"><a id="__codelineno-4-285" name="__codelineno-4-285" href="#__codelineno-4-285"></a>    <span class="n">results</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;results&quot;</span><span class="p">]</span>
+</span><span id="__span-4-286"><a id="__codelineno-4-286" name="__codelineno-4-286" href="#__codelineno-4-286"></a>    <span class="n">scored</span>  <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-4-287"><a id="__codelineno-4-287" name="__codelineno-4-287" href="#__codelineno-4-287"></a>
+</span><span id="__span-4-288"><a id="__codelineno-4-288" name="__codelineno-4-288" href="#__codelineno-4-288"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">60</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-4-289"><a id="__codelineno-4-289" name="__codelineno-4-289" href="#__codelineno-4-289"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  BENCHMARK REPORT&quot;</span><span class="p">)</span>
+</span><span id="__span-4-290"><a id="__codelineno-4-290" name="__codelineno-4-290" href="#__codelineno-4-290"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Model : </span><span class="si">{</span><span class="n">MODEL_UNDER_TEST</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-4-291"><a id="__codelineno-4-291" name="__codelineno-4-291" href="#__codelineno-4-291"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Total time: </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;total_seconds&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+</span><span id="__span-4-292"><a id="__codelineno-4-292" name="__codelineno-4-292" href="#__codelineno-4-292"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">60</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-4-293"><a id="__codelineno-4-293" name="__codelineno-4-293" href="#__codelineno-4-293"></a>
+</span><span id="__span-4-294"><a id="__codelineno-4-294" name="__codelineno-4-294" href="#__codelineno-4-294"></a>    <span class="c1"># Category breakdown</span>
+</span><span id="__span-4-295"><a id="__codelineno-4-295" name="__codelineno-4-295" href="#__codelineno-4-295"></a>    <span class="n">categories</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">))</span>
+</span><span id="__span-4-296"><a id="__codelineno-4-296" name="__codelineno-4-296" href="#__codelineno-4-296"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Category&#39;</span><span class="si">:</span><span class="s2">&lt;22</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39;Avg&#39;</span><span class="si">:</span><span class="s2">&gt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s1">&#39;Min&#39;</span><span class="si">:</span><span class="s2">&gt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s1">&#39;Max&#39;</span><span class="si">:</span><span class="s2">&gt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="s1">&#39;N&#39;</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-4-297"><a id="__codelineno-4-297" name="__codelineno-4-297" href="#__codelineno-4-297"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;─&quot;</span> <span class="o">*</span> <span class="mi">45</span><span class="p">)</span>
+</span><span id="__span-4-298"><a id="__codelineno-4-298" name="__codelineno-4-298" href="#__codelineno-4-298"></a>    <span class="k">for</span> <span class="n">cat</span> <span class="ow">in</span> <span class="n">categories</span><span class="p">:</span>
+</span><span id="__span-4-299"><a id="__codelineno-4-299" name="__codelineno-4-299" href="#__codelineno-4-299"></a>        <span class="n">cat_results</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">scored</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;category&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">cat</span><span class="p">]</span>
+</span><span id="__span-4-300"><a id="__codelineno-4-300" name="__codelineno-4-300" href="#__codelineno-4-300"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">cat_results</span><span class="p">:</span>
+</span><span id="__span-4-301"><a id="__codelineno-4-301" name="__codelineno-4-301" href="#__codelineno-4-301"></a>            <span class="k">continue</span>
+</span><span id="__span-4-302"><a id="__codelineno-4-302" name="__codelineno-4-302" href="#__codelineno-4-302"></a>        <span class="n">scores</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">cat_results</span><span class="p">]</span>
+</span><span id="__span-4-303"><a id="__codelineno-4-303" name="__codelineno-4-303" href="#__codelineno-4-303"></a>        <span class="n">avg</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+</span><span id="__span-4-304"><a id="__codelineno-4-304" name="__codelineno-4-304" href="#__codelineno-4-304"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cat</span><span class="si">:</span><span class="s2">&lt;22</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">avg</span><span class="si">:</span><span class="s2">&gt;5.1f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="nb">min</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span><span class="si">:</span><span class="s2">&gt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span><span class="si">:</span><span class="s2">&gt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-4-305"><a id="__codelineno-4-305" name="__codelineno-4-305" href="#__codelineno-4-305"></a>
+</span><span id="__span-4-306"><a id="__codelineno-4-306" name="__codelineno-4-306" href="#__codelineno-4-306"></a>    <span class="n">overall_scores</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">scored</span><span class="p">]</span>
+</span><span id="__span-4-307"><a id="__codelineno-4-307" name="__codelineno-4-307" href="#__codelineno-4-307"></a>    <span class="n">overall_avg</span>    <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">overall_scores</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">overall_scores</span><span class="p">)</span> <span class="k">if</span> <span class="n">overall_scores</span> <span class="k">else</span> <span class="mi">0</span>
+</span><span id="__span-4-308"><a id="__codelineno-4-308" name="__codelineno-4-308" href="#__codelineno-4-308"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;─&quot;</span> <span class="o">*</span> <span class="mi">45</span><span class="p">)</span>
+</span><span id="__span-4-309"><a id="__codelineno-4-309" name="__codelineno-4-309" href="#__codelineno-4-309"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;OVERALL&#39;</span><span class="si">:</span><span class="s2">&lt;22</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">overall_avg</span><span class="si">:</span><span class="s2">&gt;5.1f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="nb">min</span><span class="p">(</span><span class="n">overall_scores</span><span class="p">)</span><span class="si">:</span><span class="s2">&gt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">overall_scores</span><span class="p">)</span><span class="si">:</span><span class="s2">&gt;5</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">overall_scores</span><span class="p">)</span><span class="si">:</span><span class="s2">&gt;4</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-4-310"><a id="__codelineno-4-310" name="__codelineno-4-310" href="#__codelineno-4-310"></a>
+</span><span id="__span-4-311"><a id="__codelineno-4-311" name="__codelineno-4-311" href="#__codelineno-4-311"></a>    <span class="c1"># Quality gate</span>
+</span><span id="__span-4-312"><a id="__codelineno-4-312" name="__codelineno-4-312" href="#__codelineno-4-312"></a>    <span class="n">gate_status</span> <span class="o">=</span> <span class="s2">&quot;PASS&quot;</span> <span class="k">if</span> <span class="n">overall_avg</span> <span class="o">&gt;=</span> <span class="n">QUALITY_GATE</span> <span class="k">else</span> <span class="s2">&quot;FAIL&quot;</span>
+</span><span id="__span-4-313"><a id="__codelineno-4-313" name="__codelineno-4-313" href="#__codelineno-4-313"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  Quality gate (</span><span class="si">{</span><span class="n">QUALITY_GATE</span><span class="si">}</span><span class="s2">/5): </span><span class="si">{</span><span class="n">gate_status</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-4-314"><a id="__codelineno-4-314" name="__codelineno-4-314" href="#__codelineno-4-314"></a>
+</span><span id="__span-4-315"><a id="__codelineno-4-315" name="__codelineno-4-315" href="#__codelineno-4-315"></a>    <span class="c1"># Per-question detail</span>
+</span><span id="__span-4-316"><a id="__codelineno-4-316" name="__codelineno-4-316" href="#__codelineno-4-316"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;─&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">60</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-4-317"><a id="__codelineno-4-317" name="__codelineno-4-317" href="#__codelineno-4-317"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Per-question results</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-4-318"><a id="__codelineno-4-318" name="__codelineno-4-318" href="#__codelineno-4-318"></a>    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+</span><span id="__span-4-319"><a id="__codelineno-4-319" name="__codelineno-4-319" href="#__codelineno-4-319"></a>        <span class="n">flag</span> <span class="o">=</span> <span class="s2">&quot;  &quot;</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">4</span> <span class="k">else</span> <span class="s2">&quot;! &quot;</span>
+</span><span id="__span-4-320"><a id="__codelineno-4-320" name="__codelineno-4-320" href="#__codelineno-4-320"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">flag</span><span class="si">}{</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;12</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">/5  </span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;reason&#39;</span><span class="p">][:</span><span class="mi">60</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-4-321"><a id="__codelineno-4-321" name="__codelineno-4-321" href="#__codelineno-4-321"></a>
+</span><span id="__span-4-322"><a id="__codelineno-4-322" name="__codelineno-4-322" href="#__codelineno-4-322"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">60</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-4-323"><a id="__codelineno-4-323" name="__codelineno-4-323" href="#__codelineno-4-323"></a>
+</span><span id="__span-4-324"><a id="__codelineno-4-324" name="__codelineno-4-324" href="#__codelineno-4-324"></a>
+</span><span id="__span-4-325"><a id="__codelineno-4-325" name="__codelineno-4-325" href="#__codelineno-4-325"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-4-326"><a id="__codelineno-4-326" name="__codelineno-4-326" href="#__codelineno-4-326"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Domain Benchmark Harness — Phase 6&quot;</span><span class="p">)</span>
+</span><span id="__span-4-327"><a id="__codelineno-4-327" name="__codelineno-4-327" href="#__codelineno-4-327"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model under test : </span><span class="si">{</span><span class="n">MODEL_UNDER_TEST</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-4-328"><a id="__codelineno-4-328" name="__codelineno-4-328" href="#__codelineno-4-328"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Questions        : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">BENCHMARK</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-4-329"><a id="__codelineno-4-329" name="__codelineno-4-329" href="#__codelineno-4-329"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Quality gate     : </span><span class="si">{</span><span class="n">QUALITY_GATE</span><span class="si">}</span><span class="s2">/5&quot;</span><span class="p">)</span>
+</span><span id="__span-4-330"><a id="__codelineno-4-330" name="__codelineno-4-330" href="#__codelineno-4-330"></a>
+</span><span id="__span-4-331"><a id="__codelineno-4-331" name="__codelineno-4-331" href="#__codelineno-4-331"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">run_benchmark</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-4-332"><a id="__codelineno-4-332" name="__codelineno-4-332" href="#__codelineno-4-332"></a>    <span class="n">print_report</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span><span id="__span-4-333"><a id="__codelineno-4-333" name="__codelineno-4-333" href="#__codelineno-4-333"></a>
+</span><span id="__span-4-334"><a id="__codelineno-4-334" name="__codelineno-4-334" href="#__codelineno-4-334"></a>    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/tmp/benchmark_report.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span><span id="__span-4-335"><a id="__codelineno-4-335" name="__codelineno-4-335" href="#__codelineno-4-335"></a>        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-4-336"><a id="__codelineno-4-336" name="__codelineno-4-336" href="#__codelineno-4-336"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Full report saved to /tmp/benchmark_report.json&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="next">Next</h2>
+<p>Build the benchmark — <code>code/02_benchmark_harness.py</code> runs 10 domain-specific questions through Gemma, scores each with the LLM judge, and produces a report with category breakdown and pass/fail against a quality gate.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

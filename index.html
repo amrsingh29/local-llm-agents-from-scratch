@@ -1,0 +1,2376 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for building local AI agents from scratch using Gemma.">
+      
+      
+      
+      
+      
+        <link rel="next" href="CURRICULUM/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Gemma Local AI</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#local-llm-agents-from-scratch" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Gemma Local AI" class="md-header__button md-logo" aria-label="Gemma Local AI" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Gemma Local AI
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Local LLM Agents From Scratch
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Gemma Local AI" class="md-nav__button md-logo" aria-label="Gemma Local AI" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Gemma Local AI
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Local LLM Agents From Scratch
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Local LLM Agents From Scratch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-will-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Will Build
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phases
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-installation-and-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1 — Installation and Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-llm-fundamentals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — LLM Fundamentals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-agent-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3 — Agent Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-edge-ai-and-on-device-intelligence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — Edge AI and On-Device Intelligence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-5-orchestration-and-multi-agent-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5 — Orchestration and Multi-Agent Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-6-evaluation-and-benchmarking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 6 — Evaluation and Benchmarking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-7-production-and-enterprise-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 7 — Production and Enterprise Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Started
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-local-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Local Models
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="CURRICULUM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gemma Local AI — Learning Curriculum
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 installation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    01 installation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-installation/01-how-llms-are-packaged/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How LLMs Are Packaged and Distributed
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-installation/02-quantization-from-first-principles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantization From First Principles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-installation/03-ollama-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ollama Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="01-installation/04-gemma-model-variants/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gemma 4 Model Variants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 llm fundamentals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    02 llm fundamentals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-llm-fundamentals/01-tokens-from-first-principles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tokens From First Principles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-llm-fundamentals/02-context-window-limits-and-tricks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Context Window Limits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-llm-fundamentals/03-temperature-and-sampling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Temperature and Sampling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-llm-fundamentals/04-statelessness-why-llms-forget/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Statelessness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="02-llm-fundamentals/05-prompt-engineering-as-programming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Engineering as Programming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 agent architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    03 agent architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-agent-architecture/01-what-is-an-agent-vs-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent vs Pipeline vs Chatbot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-agent-architecture/02-the-agent-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Agent Loop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-agent-architecture/03-react-pattern-from-first-principles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The ReAct Pattern
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-agent-architecture/04-tool-calling-internals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tool Calling Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="03-agent-architecture/05-tool-schema-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tool Schema Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 edge ai
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    04 edge ai
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-edge-ai/01-edge-ai-vs-cloud-ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Edge AI vs Cloud AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-edge-ai/02-gemma-e2b-vs-26b-benchmark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gemma E2B vs 26B Benchmark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="04-edge-ai/03-model-routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 orchestration multi agent
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    05 orchestration multi agent
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="05-orchestration-multi-agent/01-multi-agent-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Agent Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="05-orchestration-multi-agent/02-gemma-as-worker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gemma as a Worker Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 evaluation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    06 evaluation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="06-evaluation/01-why-llm-evaluation-is-hard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why LLM Evaluation Is Hard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="06-evaluation/02-llm-as-judge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM-as-Judge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="06-evaluation/03-domain-specific-benchmark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domain-Specific Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="06-evaluation/04-itsm-evaluation-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ITSM Evaluation Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 production enterprise
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    07 production enterprise
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="07-production-enterprise/01-self-hosted-ai-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-Hosted AI Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="07-production-enterprise/02-concurrency-and-throughput/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concurrency and Throughput
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="07-production-enterprise/03-audit-logging-compliance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audit Logging for AI Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="07-production-enterprise/04-guardrails-for-local-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails for Local AI Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="07-production-enterprise/05-air-gapped-deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Air-Gapped AI Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-will-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Will Build
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phases
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-installation-and-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1 — Installation and Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-llm-fundamentals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — LLM Fundamentals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-agent-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3 — Agent Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-edge-ai-and-on-device-intelligence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — Edge AI and On-Device Intelligence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-5-orchestration-and-multi-agent-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5 — Orchestration and Multi-Agent Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-6-evaluation-and-benchmarking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 6 — Evaluation and Benchmarking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-7-production-and-enterprise-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 7 — Production and Enterprise Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Started
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-local-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Local Models
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="local-llm-agents-from-scratch">Local LLM Agents From Scratch</h1>
+<p>A hands-on learning series for running Google Gemma 4 locally on Apple Silicon and building LLM agents from first principles — no cloud APIs required.</p>
+<p>Every phase has two outputs: a publishable tutorial note explaining the concept, and a runnable Python experiment you can execute against your own local model.</p>
+<hr />
+<h2 id="hardware">Hardware</h2>
+<table>
+<thead>
+<tr>
+<th>Spec</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chip</td>
+<td>Apple M4</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>24 GB Unified Memory</td>
+</tr>
+<tr>
+<td>Model</td>
+<td>Gemma 4 26B MoE + Gemma 4 E2B</td>
+</tr>
+<tr>
+<td>Inference</td>
+<td>Ollama with Metal GPU acceleration</td>
+</tr>
+</tbody>
+</table>
+<p>Benchmarks in this repo are from this hardware. Your numbers will vary — the concepts and code apply to any Apple Silicon Mac with 16 GB+ RAM.</p>
+<hr />
+<h2 id="what-you-will-build">What You Will Build</h2>
+<p>By the end of all seven phases, you will have built:</p>
+<ul>
+<li>A bare-metal ReAct agent calling a local LLM — no LangChain, no frameworks</li>
+<li>A benchmark harness that compares model quality and throughput across tasks</li>
+<li>A model router that classifies incoming prompts and dispatches to the right model automatically</li>
+<li>A multi-agent system where a local Gemma worker handles sub-tasks routed by a cloud orchestrator</li>
+<li>A domain-specific evaluation harness using LLM-as-judge (free evals, no external service)</li>
+<li>A self-hosted inference server with audit logging, rate limiting, and guardrails</li>
+</ul>
+<hr />
+<h2 id="phases">Phases</h2>
+<h3 id="phase-1-installation-and-infrastructure">Phase 1 — Installation and Infrastructure</h3>
+<p><strong>Status: Complete</strong></p>
+<p>Install Ollama, pull Gemma 4 26B, verify Metal GPU acceleration, establish throughput baseline.</p>
+<p>Key findings on M4 24 GB:
+- Sustained throughput: ~25 tok/s
+- Cold start: ~4 tok/s (first request after model load)
+- No thermal throttling observed in extended runs</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>What it covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>notes/01-how-llms-are-packaged.md</code></td>
+<td>GGUF format, safetensors, Ollama as inference server</td>
+</tr>
+<tr>
+<td><code>notes/02-quantization-from-first-principles.md</code></td>
+<td>FP32 to INT4, K-quants, quality vs size tradeoffs</td>
+</tr>
+<tr>
+<td><code>notes/03-ollama-architecture.md</code></td>
+<td>Full stack: llama.cpp, Metal, KV cache, concurrency model</td>
+</tr>
+<tr>
+<td><code>notes/04-gemma-model-variants.md</code></td>
+<td>E2B vs 26B, MoE architecture, use cases</td>
+</tr>
+<tr>
+<td><code>code/01_first_inference.py</code></td>
+<td>Clean inference wrapper with token stats</td>
+</tr>
+<tr>
+<td><code>code/02_benchmark_throughput.py</code></td>
+<td>Short/long throughput, temperature variance, stability</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="phase-2-llm-fundamentals">Phase 2 — LLM Fundamentals</h3>
+<p><strong>Status: Complete</strong></p>
+<p>Five experiments that build intuition for how LLMs actually work — before writing a single line of agent code.</p>
+<p>Key findings:
+- Numbers tokenize at ~0.7 chars/token — the most expensive content type
+- Lost-in-the-middle: model refused to answer when signal-to-noise ratio was too low
+- Throughput drops 5.7x when context grows 14.6x
+- Gemma 4 resisted prompt injection ("ignore your previous instructions")</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>What it covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>notes/01-tokens-from-first-principles.md</code></td>
+<td>Tokenization, BPE, chars/token by content type</td>
+</tr>
+<tr>
+<td><code>notes/02-context-window-limits-and-tricks.md</code></td>
+<td>Lost-in-the-middle, RAG, throughput degradation</td>
+</tr>
+<tr>
+<td><code>notes/03-temperature-and-sampling.md</code></td>
+<td>Temperature, top-p, top-k, thinking mode</td>
+</tr>
+<tr>
+<td><code>notes/04-statelessness-why-llms-forget.md</code></td>
+<td>Statelessness proof, faked memory, production strategies</td>
+</tr>
+<tr>
+<td><code>notes/05-prompt-engineering-as-programming.md</code></td>
+<td>System prompts, format control, prompt injection, guardrails</td>
+</tr>
+<tr>
+<td><code>code/01_tokenization_experiments.py</code></td>
+<td>Real token counts across content types</td>
+</tr>
+<tr>
+<td><code>code/02_context_window_limits.py</code></td>
+<td>Lost-in-the-middle demonstration</td>
+</tr>
+<tr>
+<td><code>code/03_temperature_experiments.py</code></td>
+<td>Output variance across temperature settings</td>
+</tr>
+<tr>
+<td><code>code/04_stateless_proof.py</code></td>
+<td>Proving statelessness with and without conversation history</td>
+</tr>
+<tr>
+<td><code>code/05_system_prompts.py</code></td>
+<td>Behavioral shift from system prompt changes</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="phase-3-agent-architecture">Phase 3 — Agent Architecture</h3>
+<p><strong>Status: Complete</strong></p>
+<p>Build a ReAct agent from scratch. No frameworks. Every line of the agent loop written by hand so you know exactly what is happening.</p>
+<p>Key findings:
+- Stop sequence <code>"\nObservation:"</code> is mandatory — without it the model hallucinated tool results
+- After stop sequence fix: model correctly reads real errors and gives honest failure reports
+- Schema quality governs agent quality — a bad description breaks tool selection even with perfect code
+- Pipeline and agent architectures produce identical results on known scenarios; the difference is maintainability as requirements grow</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>What it covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>notes/01-what-is-an-agent-vs-pipeline.md</code></td>
+<td>Chatbot vs pipeline vs agent, with stock price example</td>
+</tr>
+<tr>
+<td><code>notes/02-the-agent-loop.md</code></td>
+<td>Perceive → Think → Act → Observe, termination problem, failure modes</td>
+</tr>
+<tr>
+<td><code>notes/03-react-pattern-from-first-principles.md</code></td>
+<td>ReAct format, stop sequences, full worked example</td>
+</tr>
+<tr>
+<td><code>notes/04-tool-calling-internals.md</code></td>
+<td>Four failure modes, hallucination discovery, stop sequence fix</td>
+</tr>
+<tr>
+<td><code>notes/05-tool-schema-design.md</code></td>
+<td>Schema design rules, three common mistakes, native tool calling</td>
+</tr>
+<tr>
+<td><code>code/01_bare_metal_react_agent.py</code></td>
+<td>Full ReAct agent: calculator, date, file_read, word_count tools</td>
+</tr>
+<tr>
+<td><code>code/02_agent_error_handling.py</code></td>
+<td>Four error scenarios with deliberately broken tools</td>
+</tr>
+<tr>
+<td><code>code/03_pipeline_vs_agent.py</code></td>
+<td>Same task through both architectures across three failure scenarios</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="phase-4-edge-ai-and-on-device-intelligence">Phase 4 — Edge AI and On-Device Intelligence</h3>
+<p><strong>Status: Complete</strong></p>
+<p>When does running a model locally beat calling a cloud API? Benchmark two local models, build a router that dispatches to the right one automatically.</p>
+<p>Key findings (M4 24 GB, Gemma 4 E2B vs 26B):</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>gemma4:e2b</th>
+<th>gemma4:26b</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Avg throughput</td>
+<td>51.9 tok/s</td>
+<td>20.6 tok/s</td>
+</tr>
+<tr>
+<td>Speedup</td>
+<td>2.5x faster</td>
+<td>baseline</td>
+</tr>
+<tr>
+<td>Factual quality</td>
+<td>5/5</td>
+<td>5/5</td>
+</tr>
+<tr>
+<td>Reasoning quality</td>
+<td>4/5</td>
+<td>4.5/5</td>
+</tr>
+<tr>
+<td>Code (format-following)</td>
+<td>Verbose, ignores format</td>
+<td>Concise, follows instructions</td>
+</tr>
+<tr>
+<td>Memory loaded</td>
+<td>~7 GB</td>
+<td>~20 GB</td>
+</tr>
+</tbody>
+</table>
+<p>Router result: 4/4 correct classifications on first run. Classifier overhead ~400ms warm.</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>What it covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>notes/01-edge-ai-vs-cloud-ai.md</code></td>
+<td>Five-axis decision framework: latency, cost, privacy, reliability, capability</td>
+</tr>
+<tr>
+<td><code>notes/02-gemma-e2b-vs-26b-benchmark.md</code></td>
+<td>Full benchmark with per-task prompts, responses, and analysis</td>
+</tr>
+<tr>
+<td><code>notes/03-model-routing.md</code></td>
+<td>Three routing strategies, classifier prompt, experiment results</td>
+</tr>
+<tr>
+<td><code>code/01_model_benchmark.py</code></td>
+<td>Automated benchmark harness with LLM-as-judge scoring</td>
+</tr>
+<tr>
+<td><code>code/02_model_router.py</code></td>
+<td>Classifier router dispatching to E2B or 26B based on task type</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="phase-5-orchestration-and-multi-agent-systems">Phase 5 — Orchestration and Multi-Agent Systems</h3>
+<p><strong>Status: Complete</strong></p>
+<p>Fully local multi-agent system — Gemma 26B orchestrates and synthesises, E2B/26B workers execute sub-tasks routed by task type.</p>
+<p>Key findings:
+- 4-part transformer explainer decomposed into 4 correctly typed sub-tasks on first run
+- Routing was automatic: orchestrator assigned <code>type</code>, routing table selected the model
+- E2B handled summarise tasks at 51 tok/s; 26B handled reasoning and code
+- 1,949 total worker tokens — zero API cost, everything local</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>What it covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>notes/01-multi-agent-architecture.md</code></td>
+<td>Four single-agent failure modes, orchestrator/worker pattern, task decomposition, dependency graph, experiment results</td>
+</tr>
+<tr>
+<td><code>notes/02-gemma-as-worker.md</code></td>
+<td>Worker contract, what Gemma handles well, output format spec, context-passing patterns, per-worker experiment results</td>
+</tr>
+<tr>
+<td><code>code/01_orchestrated_agent.py</code></td>
+<td>Full local multi-agent system: decompose → route → execute → synthesise</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="phase-6-evaluation-and-benchmarking">Phase 6 — Evaluation and Benchmarking</h3>
+<p><strong>Status: Complete</strong></p>
+<p>Domain-specific benchmark harness using Gemma as the judge — free evaluations, fully local.</p>
+<p>Key findings (gemma4:26b, 10-question domain benchmark):
+- Overall: 4.5/5 — quality gate (4.0/5) passed
+- Evaluation category scored 5.0/5 — strong meta-knowledge
+- Common failure: token limit truncation, not factual errors — answers were correct but cut off
+- Judge calibrated correctly: 5/3/1 on good/partial/wrong answers
+- 360 seconds for 10 questions + 10 judge calls — zero API cost</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>What it covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>notes/01-why-llm-evaluation-is-hard.md</code></td>
+<td>Non-determinism, benchmark gaming, verbosity bias, three evaluation approaches</td>
+</tr>
+<tr>
+<td><code>notes/02-llm-as-judge.md</code></td>
+<td>Judge prompt design, calibration, known biases, experiment results</td>
+</tr>
+<tr>
+<td><code>notes/03-domain-specific-benchmark.md</code></td>
+<td>Benchmark design principles, 10-question domain test, full results</td>
+</tr>
+<tr>
+<td><code>code/01_llm_judge.py</code></td>
+<td>Standalone judge: scores any response 1–5 with reasoning</td>
+</tr>
+<tr>
+<td><code>code/02_benchmark_harness.py</code></td>
+<td>Full benchmark runner with category report and quality gate</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="phase-7-production-and-enterprise-patterns">Phase 7 — Production and Enterprise Patterns</h3>
+<p><strong>Status: Complete</strong></p>
+<p>Self-hosted inference server with concurrency control, audit logging, and guardrails — the production layer above the model.</p>
+<p>Key findings (M4 24 GB, gemma4:26b):
+- Audit logger correctly records two-phase request/response with latency data
+- Guardrail injection detection: 2/2 injection attempts blocked; scope filter caught the third via defence-in-depth
+- Critical bug found: substring keyword matching produces false negatives — <code>"api" in "capital"</code> is True; word-boundary regex required for production scope filters
+- All components run fully offline (no external network calls)</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>What it covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>notes/01-self-hosted-ai-architecture.md</code></td>
+<td>5-layer production architecture, enterprise objections, air-gap checklist</td>
+</tr>
+<tr>
+<td><code>notes/02-concurrency-and-throughput.md</code></td>
+<td>Token bucket rate limiter, semaphore queue, thread pool offload, load behaviour</td>
+</tr>
+<tr>
+<td><code>notes/03-audit-logging-compliance.md</code></td>
+<td>Two-phase write, per-user reporting, compliance export, real latency data</td>
+</tr>
+<tr>
+<td><code>notes/04-guardrails-for-local-models.md</code></td>
+<td>6 test cases with real results, substring matching bug, defence-in-depth finding</td>
+</tr>
+<tr>
+<td><code>notes/05-air-gapped-deployment.md</code></td>
+<td>Pre-staging checklist, telemetry disable, cross-model eval alternatives</td>
+</tr>
+<tr>
+<td><code>code/01_concurrent_inference_server.py</code></td>
+<td>FastAPI + semaphore + bounded queue + token bucket rate limiter</td>
+</tr>
+<tr>
+<td><code>code/02_audit_logger.py</code></td>
+<td>SQLite audit logger with compliance export</td>
+</tr>
+<tr>
+<td><code>code/03_guardrails.py</code></td>
+<td>Input/output filter: injection detection, scope enforcement, PII detection</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="getting-started">Getting Started</h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Install Ollama</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>brew<span class="w"> </span>install<span class="w"> </span>ollama
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Start with Flash Attention enabled</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">OLLAMA_FLASH_ATTENTION</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="w"> </span><span class="nv">OLLAMA_KV_CACHE_TYPE</span><span class="o">=</span><span class="s2">&quot;q8_0&quot;</span><span class="w"> </span>ollama<span class="w"> </span>serve
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Pull models</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ollama<span class="w"> </span>pull<span class="w"> </span>gemma4:26b<span class="w">   </span><span class="c1"># 17 GB — main model</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>ollama<span class="w"> </span>pull<span class="w"> </span>gemma4:e2b<span class="w">   </span><span class="c1"># 7.2 GB — fast model for routing</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Run any experiment</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>python<span class="w"> </span><span class="m">01</span>-installation/code/01_first_inference.py
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>python<span class="w"> </span><span class="m">03</span>-agent-architecture/code/01_bare_metal_react_agent.py
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>python<span class="w"> </span><span class="m">04</span>-edge-ai/code/02_model_router.py
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>python<span class="w"> </span><span class="m">05</span>-orchestration-multi-agent/code/01_orchestrated_agent.py
+</span></code></pre></div>
+<p><strong>Requirements:</strong> Python 3.11+, <code>requests</code> library, Ollama 0.20+</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>requests
+</span></code></pre></div>
+<hr />
+<h2 id="structure">Structure</h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>├── 01-installation/
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│   ├── notes/          # Concept explanations (publishable tutorial format)
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│   └── code/           # Runnable Python experiments
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>├── 02-llm-fundamentals/
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>├── 03-agent-architecture/
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>├── 04-edge-ai/
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>├── 05-orchestration-multi-agent/
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>├── 06-evaluation/                  # Upcoming
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>├── 07-production-enterprise/       # Upcoming
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>├── CURRICULUM.md       # Full 7-phase learning plan with details
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>└── PROGRESS.md         # Session log — what was built and when
+</span></code></pre></div>
+<hr />
+<h2 id="why-local-models">Why Local Models</h2>
+<ul>
+<li><strong>Privacy:</strong> data never leaves your machine — required for regulated industries</li>
+<li><strong>Cost:</strong> no per-token charges during development and high-volume workloads</li>
+<li><strong>Latency:</strong> localhost inference with no round-trip to a remote API</li>
+<li><strong>Reliability:</strong> no rate limits, no provider outages, no breaking model updates</li>
+<li><strong>Learning:</strong> when you own the stack end to end, you understand it end to end</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.sections", "navigation.expand", "content.code.copy"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

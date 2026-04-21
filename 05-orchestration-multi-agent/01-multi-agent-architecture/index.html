@@ -1,0 +1,2901 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for building local AI agents from scratch using Gemma.">
+      
+      
+      
+      
+        <link rel="prev" href="../../04-edge-ai/03-model-routing/">
+      
+      
+        <link rel="next" href="../02-gemma-as-worker/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Multi-Agent Architecture - Gemma Local AI</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#multi-agent-architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Gemma Local AI" class="md-header__button md-logo" aria-label="Gemma Local AI" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Gemma Local AI
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Multi-Agent Architecture
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Gemma Local AI" class="md-nav__button md-logo" aria-label="Gemma Local AI" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Gemma Local AI
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Local LLM Agents From Scratch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CURRICULUM/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gemma Local AI — Learning Curriculum
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 installation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    01 installation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-installation/01-how-llms-are-packaged/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How LLMs Are Packaged and Distributed
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-installation/02-quantization-from-first-principles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantization From First Principles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-installation/03-ollama-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ollama Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-installation/04-gemma-model-variants/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gemma 4 Model Variants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 llm fundamentals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    02 llm fundamentals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-llm-fundamentals/01-tokens-from-first-principles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tokens From First Principles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-llm-fundamentals/02-context-window-limits-and-tricks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Context Window Limits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-llm-fundamentals/03-temperature-and-sampling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Temperature and Sampling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-llm-fundamentals/04-statelessness-why-llms-forget/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Statelessness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-llm-fundamentals/05-prompt-engineering-as-programming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Engineering as Programming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 agent architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    03 agent architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-agent-architecture/01-what-is-an-agent-vs-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent vs Pipeline vs Chatbot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-agent-architecture/02-the-agent-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Agent Loop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-agent-architecture/03-react-pattern-from-first-principles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The ReAct Pattern
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-agent-architecture/04-tool-calling-internals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tool Calling Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-agent-architecture/05-tool-schema-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tool Schema Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 edge ai
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    04 edge ai
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-edge-ai/01-edge-ai-vs-cloud-ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Edge AI vs Cloud AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-edge-ai/02-gemma-e2b-vs-26b-benchmark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gemma E2B vs 26B Benchmark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-edge-ai/03-model-routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 orchestration multi agent
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    05 orchestration multi agent
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Agent Architecture
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Agent Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-single-agent-failure-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Single Agent Failure Mode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Single Agent Failure Mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-1-context-bloat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 1 — Context Bloat
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-2-reasoning-degradation-over-long-chains" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 2 — Reasoning Degradation Over Long Chains
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-3-no-parallelism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 3 — No Parallelism
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-4-one-model-cannot-be-optimal-for-all-sub-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 4 — One Model Cannot Be Optimal for All Sub-Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-orchestrator-worker-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Orchestrator / Worker Pattern
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-changes-with-two-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Changes With Two Models
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task Decomposition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#execution-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Modes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Execution Modes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sequential" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequential
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parallel-fan-out-fan-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parallel (Fan-Out / Fan-In)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hierarchical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hierarchical
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-routing-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Routing Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-this-phase-builds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This Phase Builds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-multi-agent-system-in-action" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiment — Multi-Agent System in Action
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Experiment — Multi-Agent System in Action">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-the-code-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the Code Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Request
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-decomposition-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Decomposition Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-worker-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Worker Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-synthesised-final-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Synthesised Final Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#results-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Results Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enterprise-implication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Implication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#full-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-gemma-as-worker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gemma as a Worker Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 evaluation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    06 evaluation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-evaluation/01-why-llm-evaluation-is-hard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why LLM Evaluation Is Hard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-evaluation/02-llm-as-judge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM-as-Judge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-evaluation/03-domain-specific-benchmark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domain-Specific Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../06-evaluation/04-itsm-evaluation-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ITSM Evaluation Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 production enterprise
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    07 production enterprise
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-production-enterprise/01-self-hosted-ai-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-Hosted AI Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-production-enterprise/02-concurrency-and-throughput/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concurrency and Throughput
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-production-enterprise/03-audit-logging-compliance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audit Logging for AI Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-production-enterprise/04-guardrails-for-local-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails for Local AI Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../07-production-enterprise/05-air-gapped-deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Air-Gapped AI Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-single-agent-failure-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Single Agent Failure Mode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Single Agent Failure Mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-1-context-bloat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 1 — Context Bloat
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-2-reasoning-degradation-over-long-chains" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 2 — Reasoning Degradation Over Long Chains
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-3-no-parallelism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 3 — No Parallelism
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-4-one-model-cannot-be-optimal-for-all-sub-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem 4 — One Model Cannot Be Optimal for All Sub-Tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-orchestrator-worker-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Orchestrator / Worker Pattern
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-changes-with-two-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Changes With Two Models
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#task-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task Decomposition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#execution-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Modes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Execution Modes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sequential" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequential
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parallel-fan-out-fan-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parallel (Fan-Out / Fan-In)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hierarchical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hierarchical
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-routing-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Routing Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-this-phase-builds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This Phase Builds
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#experiment-multi-agent-system-in-action" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiment — Multi-Agent System in Action
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Experiment — Multi-Agent System in Action">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-the-code-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the Code Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Request
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-decomposition-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Decomposition Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-worker-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Worker Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-synthesised-final-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Synthesised Final Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#results-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Results Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enterprise-implication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Implication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#full-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="multi-agent-architecture">Multi-Agent Architecture</h1>
+<h2 id="the-single-agent-failure-mode">The Single Agent Failure Mode</h2>
+<p>In Phase 3, we built a ReAct agent that works well on focused tasks: look up a price, calculate a total, read a file. Give it a complex, multi-part task and it starts to break.</p>
+<p><strong>Why?</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>User: &quot;Review our Q1 sales data, identify the top 3 underperforming regions,
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>       write a summary for the executive team, and suggest 3 actionable fixes
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>       for each region.&quot;
+</span></code></pre></div>
+<p>A single agent tackling this in one loop faces four problems:</p>
+<h3 id="problem-1-context-bloat">Problem 1 — Context Bloat</h3>
+<p>Each step of a long task fills the context window with intermediate results, tool outputs, and reasoning traces. By step 8, the model is working in a context that looks like:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>[System prompt: 500 tokens]
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>[User task: 100 tokens]
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>[Step 1 thought + action: 200 tokens]
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>[Step 1 tool output: 800 tokens]   ← large data retrieval
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>[Step 2 thought + action: 200 tokens]
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>[Step 2 tool output: 600 tokens]
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>...
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>[Step 8: model is now 6,000 tokens in]
+</span></code></pre></div>
+<p>At 8,192 tokens context, the model's attention is spread thin. The "lost-in-the-middle" problem from Phase 2 kicks in — early instructions lose weight relative to recent content.</p>
+<h3 id="problem-2-reasoning-degradation-over-long-chains">Problem 2 — Reasoning Degradation Over Long Chains</h3>
+<p>LLMs are trained to be accurate across short-to-medium reasoning chains. Accuracy degrades as the chain grows. A 15-step agent loop that is 95% reliable per step produces a correct final answer only 46% of the time (0.95^15 ≈ 0.46). This is not a model limitation — it is a fundamental property of compounding probabilities.</p>
+<h3 id="problem-3-no-parallelism">Problem 3 — No Parallelism</h3>
+<p>A single agent loop is sequential: step 1 → step 2 → step 3. If the three underperforming regions could be analysed independently, a single agent still waits for each analysis to complete before starting the next. A well-designed multi-agent system runs those analyses in parallel.</p>
+<h3 id="problem-4-one-model-cannot-be-optimal-for-all-sub-tasks">Problem 4 — One Model Cannot Be Optimal for All Sub-Tasks</h3>
+<p>Analysing raw sales data requires different strengths than writing executive prose. The model that is best at numerical reasoning is not necessarily best at structured business writing. A single-model agent cannot exploit specialisation.</p>
+<hr />
+<h2 id="the-orchestrator-worker-pattern">The Orchestrator / Worker Pattern</h2>
+<p>The solution splits the problem across two roles:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>User request
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>     ↓
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>[Orchestrator]
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  - Understands the full task
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  - Breaks it into sub-tasks
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  - Assigns each sub-task to a worker
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  - Collects results
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  - Assembles final output
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>     ↓              ↓              ↓
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>[Worker A]      [Worker B]      [Worker C]
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>sub-task 1      sub-task 2      sub-task 3
+</span></code></pre></div>
+<p><strong>The orchestrator never executes sub-tasks directly.</strong> It reasons about the structure of the problem and delegates. Its context stays small — it only needs to hold the task decomposition and the results, not the full execution trace of each sub-task.</p>
+<p><strong>Each worker has a narrow, well-defined task.</strong> Its context is small (just its sub-task), its reasoning chain is short, and it can be the right model for that specific type of work.</p>
+<hr />
+<h2 id="what-changes-with-two-models">What Changes With Two Models</h2>
+<p>In this phase we use:</p>
+<ul>
+<li><strong>Claude</strong> as the orchestrator — frontier reasoning capability, handles task decomposition and final synthesis</li>
+<li><strong>Gemma 4 E2B / 26B</strong> as workers — local inference, no API cost, fast execution on well-defined sub-tasks</li>
+</ul>
+<p>This is not arbitrary. The orchestrator needs to understand a complex, ambiguous user request and produce a clean decomposition. That is a hard reasoning task — the right place for a frontier model. The workers receive precise, narrow sub-tasks derived from that decomposition. Those sub-tasks are much easier to execute — the right place for a capable but fast local model.</p>
+<p>The cost structure changes significantly:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>All-Claude approach:
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  1 orchestration call + N worker calls, all at cloud API pricing
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Hybrid approach:
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  1 orchestration call at cloud pricing
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  N worker calls at ~$0 (local inference)
+</span></code></pre></div>
+<p>For tasks decomposed into 5–10 sub-tasks, the hybrid approach reduces API cost by 80–90% while maintaining orchestrator-level reasoning quality on the part that actually needs it.</p>
+<hr />
+<h2 id="task-decomposition">Task Decomposition</h2>
+<p>Decomposition is the orchestrator's core skill. Given a complex request, it produces a list of atomic sub-tasks — each one:</p>
+<ul>
+<li><strong>Self-contained:</strong> completable without knowing the output of other sub-tasks (unless there is a dependency)</li>
+<li><strong>Typed:</strong> labelled with the task category so it can be routed to the right model</li>
+<li><strong>Sequenced:</strong> dependencies made explicit so parallel and sequential steps are clear</li>
+</ul>
+<p>Example decomposition for the sales analysis task:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">[</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">&quot;task&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Summarise the Q1 sales data for each region in 2 sentences&quot;</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;summarise&quot;</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nt">&quot;depends_on&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="nt">&quot;route_to&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;local&quot;</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="nt">&quot;task&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Identify the 3 regions with the lowest Q1 revenue growth&quot;</span><span class="p">,</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;reasoning&quot;</span><span class="p">,</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="nt">&quot;depends_on&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="nt">&quot;route_to&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;local&quot;</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">    </span><span class="nt">&quot;task&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Write an executive summary of the 3 underperforming regions&quot;</span><span class="p">,</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;summarise&quot;</span><span class="p">,</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">    </span><span class="nt">&quot;depends_on&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">    </span><span class="nt">&quot;route_to&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;local&quot;</span>
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">    </span><span class="nt">&quot;task&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Suggest 3 actionable fixes for each underperforming region&quot;</span><span class="p">,</span>
+</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;reasoning&quot;</span><span class="p">,</span>
+</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">    </span><span class="nt">&quot;depends_on&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">    </span><span class="nt">&quot;route_to&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cloud&quot;</span>
+</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="p">]</span>
+</span></code></pre></div>
+<p>Tasks 3 and 4 both depend on task 2 but not on each other — they can run in parallel once task 2 is complete.</p>
+<hr />
+<h2 id="execution-modes">Execution Modes</h2>
+<h3 id="sequential">Sequential</h3>
+<p>Each sub-task runs after the previous completes. Simple to implement, slow for independent tasks.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Task 1 → Task 2 → Task 3 → Task 4
+</span></code></pre></div>
+<h3 id="parallel-fan-out-fan-in">Parallel (Fan-Out / Fan-In)</h3>
+<p>Independent sub-tasks run simultaneously. Results collected before dependent tasks begin.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Task 1 → Task 2 → [Task 3, Task 4 in parallel] → Synthesise
+</span></code></pre></div>
+<h3 id="hierarchical">Hierarchical</h3>
+<p>Workers can themselves be orchestrators — sub-tasks are further decomposed into micro-tasks. Used for very long-horizon work. Not covered in this phase.</p>
+<hr />
+<h2 id="the-routing-decision">The Routing Decision</h2>
+<p>Each sub-task is routed based on two signals:</p>
+<ol>
+<li><strong>Task type</strong> — from the routing table built in Phase 4 (factual/summarise → local, reasoning/code → local-26b or cloud)</li>
+<li><strong>Sensitivity flag</strong> — if the sub-task involves data that cannot leave the device, it is forced to local regardless of type</li>
+</ol>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>route(task):
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  if task.sensitive:
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>      return local_model
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  if task.type in [&quot;factual&quot;, &quot;summarise&quot;]:
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>      return gemma_e2b
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  if task.type in [&quot;reasoning&quot;, &quot;code&quot;]:
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>      return gemma_26b
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  if task.requires_frontier:
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>      return claude_api
+</span></code></pre></div>
+<p>The orchestrator sets the <code>sensitive</code> and <code>requires_frontier</code> flags when it decomposes the task. The router enforces them.</p>
+<hr />
+<h2 id="what-this-phase-builds">What This Phase Builds</h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>User task (complex, multi-part)
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>         ↓
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  [Gemma 26B — Orchestrator]
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  Decomposes into typed, sequenced sub-tasks
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>         ↓
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  [Router — from Phase 4]
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  Routes each sub-task to the right model
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>         ↓
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  [Gemma E2B / 26B — Workers]
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  Execute sub-tasks locally
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>         ↓
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>  [Gemma 26B — Synthesiser]
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  Assembles worker outputs into final response
+</span></code></pre></div>
+<p>Fully local — no cloud API required. Gemma 26B handles orchestration and synthesis (the reasoning-heavy steps). E2B handles factual and summarise sub-tasks at 2.5x the speed. Everything runs on-device.</p>
+<blockquote>
+<p><strong>Note on hybrid systems:</strong> In production, the orchestrator role is often given to a frontier cloud model (Claude, GPT-4) for stronger task decomposition on ambiguous or complex requests. The worker layer stays local. That hybrid pattern becomes viable once Claude API credits are available — the architecture and worker code are identical, only the orchestrator call changes.</p>
+</blockquote>
+<hr />
+<h2 id="experiment-multi-agent-system-in-action">Experiment — Multi-Agent System in Action</h2>
+<blockquote>
+<p>Run on Apple M4 24 GB — 2026-04-21
+Script: <code>05-orchestration-multi-agent/code/01_orchestrated_agent.py</code></p>
+</blockquote>
+<h3 id="what-the-code-does">What the Code Does</h3>
+<p>The script has three stages:</p>
+<p><strong>Stage 1 — Decompose.</strong> Gemma 26B receives the full user request and a structured prompt instructing it to return a raw JSON array of sub-tasks. Each sub-task has an <code>id</code>, a <code>task</code> description, a <code>type</code> (used for routing), a <code>depends_on</code> list, and an <code>output_format</code> spec. No markdown, no explanation — just the JSON.</p>
+<p><strong>Stage 2 — Execute.</strong> The execution engine reads the sub-task list, finds tasks with no unmet dependencies, and runs them in order. Each sub-task is passed to <code>run_worker()</code>, which looks up the task type in the routing table, selects E2B or 26B, and calls Ollama. If a sub-task depends on a prior one, the prior result is injected into the prompt as context.</p>
+<p><strong>Stage 3 — Synthesise.</strong> Once all workers are done, Gemma 26B receives the original request and all worker outputs, and produces the final response.</p>
+<h3 id="the-request">The Request</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>I&#39;m learning about transformer models. Can you:
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>1) Explain what the attention mechanism is in simple terms,
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>2) Compare self-attention vs cross-attention,
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>3) Give me a Python code snippet showing a minimal dot-product attention calculation,
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>and 4) Summarise when I would use an encoder-only vs decoder-only vs encoder-decoder architecture.
+</span></code></pre></div>
+<p>This request has four independent parts — no sub-task depends on another. All four can run in any order.</p>
+<h3 id="step-1-decomposition-output">Step 1 — Decomposition Output</h3>
+<p>Gemma 26B decomposed the request into 4 sub-tasks and assigned correct types:</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Type</th>
+<th>Task (truncated)</th>
+<th>Routed to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>summarise</td>
+<td>Explain the attention mechanism using simple terms...</td>
+<td>gemma4:e2b</td>
+</tr>
+<tr>
+<td>2</td>
+<td>reasoning</td>
+<td>Compare and contrast self-attention vs cross-attention...</td>
+<td>gemma4:26b</td>
+</tr>
+<tr>
+<td>3</td>
+<td>code</td>
+<td>Write a minimal Python snippet showing dot-product attention...</td>
+<td>gemma4:26b</td>
+</tr>
+<tr>
+<td>4</td>
+<td>summarise</td>
+<td>Summarise when to use encoder-only vs decoder-only vs encoder-decoder...</td>
+<td>gemma4:e2b</td>
+</tr>
+</tbody>
+</table>
+<p>The routing is automatic — the orchestrator assigned <code>type</code>, the routing table selected the model. No explicit routing instruction was needed.</p>
+<h3 id="step-2-worker-results">Step 2 — Worker Results</h3>
+<p><strong>Sub-task 1 — Attention mechanism (summarise → E2B)</strong></p>
+<ul>
+<li>50.9 tok/s | 570 tokens | 17,527ms</li>
+<li>E2B explained attention as: "when your brain doesn't treat every word with equal importance — the model looks at every other word, assigns importance scores, and creates a weighted summary." Correct, approachable, followed the format instruction.</li>
+</ul>
+<p><strong>Sub-task 2 — Self-attention vs cross-attention (reasoning → 26B)</strong></p>
+<ul>
+<li>9.4 tok/s | 642 tokens | 83,379ms</li>
+<li>26B produced a structured comparison: self-attention relates positions within the same sequence (intra-sequence); cross-attention bridges two sequences, e.g. encoder output → decoder input (inter-sequence). Included a table with Query/Key/Value sources for each.</li>
+</ul>
+<p><strong>Sub-task 3 — Dot-product attention code (code → 26B)</strong></p>
+<ul>
+<li>16.2 tok/s | 287 tokens | 19,056ms</li>
+<li>26B produced a clean NumPy implementation of <code>scaled_dot_product_attention(Q, K, V)</code> — three steps: compute scores, apply softmax, multiply by V. Concise, no unnecessary comments.</li>
+</ul>
+<p><strong>Sub-task 4 — Architecture guide (summarise → E2B)</strong></p>
+<ul>
+<li>51.2 tok/s | 450 tokens | 16,105ms</li>
+<li>E2B correctly covered all three: encoder-only (BERT) for understanding/classification, decoder-only (GPT) for generation, encoder-decoder (T5, BART) for seq-to-seq translation and summarisation.</li>
+</ul>
+<h3 id="step-3-synthesised-final-output">Step 3 — Synthesised Final Output</h3>
+<p>Gemma 26B assembled all four worker outputs into a single structured response with:
+- A plain-English attention explanation with a concrete pronoun-resolution example
+- A comparison table (self-attention vs cross-attention — Q/K/V sources, relationship type, primary goal)
+- The working NumPy code block
+- A three-section architecture guide with use cases per type</p>
+<p>The synthesis was publication-quality on the first run.</p>
+<h3 id="results-summary">Results Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Sub-task</th>
+<th>Type</th>
+<th>Model</th>
+<th>Speed</th>
+<th>Tokens</th>
+<th>Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Attention mechanism</td>
+<td>summarise</td>
+<td>E2B</td>
+<td>50.9 tok/s</td>
+<td>570</td>
+<td>17.5s</td>
+</tr>
+<tr>
+<td>Self vs cross-attention</td>
+<td>reasoning</td>
+<td>26B</td>
+<td>9.4 tok/s</td>
+<td>642</td>
+<td>83.4s</td>
+</tr>
+<tr>
+<td>Dot-product attention code</td>
+<td>code</td>
+<td>26B</td>
+<td>16.2 tok/s</td>
+<td>287</td>
+<td>19.1s</td>
+</tr>
+<tr>
+<td>Architecture guide</td>
+<td>summarise</td>
+<td>E2B</td>
+<td>51.2 tok/s</td>
+<td>450</td>
+<td>16.1s</td>
+</tr>
+<tr>
+<td><strong>Total workers</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td><strong>1,949</strong></td>
+<td><strong>136s</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Routing accuracy:</strong> 4/4 correct — the orchestrator assigned types that matched exactly what Phase 4 identified as the right model per task.</p>
+<p><strong>Speed observation:</strong> Sub-task 2 (reasoning) ran at 9.4 tok/s vs E2B's ~51 tok/s. The reasoning task generated 642 tokens — with both models competing for the same 24 GB of unified memory, 26B was partially displaced by E2B's prior run, causing a reload. In a production system, the orchestrator would schedule 26B tasks first to avoid cold-start penalties.</p>
+<p><strong>All inference local — zero API cost.</strong></p>
+<hr />
+<h2 id="enterprise-implication">Enterprise Implication</h2>
+<p>The orchestrator/worker pattern maps directly to how enterprises structure knowledge work:</p>
+<ul>
+<li>A senior analyst (orchestrator) scopes a problem and assigns components to junior analysts (workers)</li>
+<li>Each junior analyst has a focused task, reports back a structured result</li>
+<li>The senior analyst synthesises the findings into a client deliverable</li>
+</ul>
+<p>AI multi-agent systems are the same structure. The enterprise value is that the "senior analyst" reasoning (Claude) is applied only where it is needed — decomposition and synthesis — while the volume work (data extraction, summarisation, analysis of individual components) runs locally at near-zero cost.</p>
+<p>This is the architecture behind every enterprise AI assistant that reports "80% cost reduction vs naive API usage." The cost reduction comes from routing, not from using a worse model everywhere.</p>
+<hr />
+<h2 id="key-terms">Key Terms</h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Orchestrator</td>
+<td>The agent responsible for task decomposition, routing, and final synthesis</td>
+</tr>
+<tr>
+<td>Worker</td>
+<td>An agent that executes a single, well-defined sub-task and returns a result</td>
+</tr>
+<tr>
+<td>Task decomposition</td>
+<td>Breaking a complex request into atomic, typed, sequenced sub-tasks</td>
+</tr>
+<tr>
+<td>Fan-out</td>
+<td>Dispatching multiple independent sub-tasks in parallel</td>
+</tr>
+<tr>
+<td>Fan-in</td>
+<td>Collecting results from parallel workers before proceeding</td>
+</tr>
+<tr>
+<td>Dependency graph</td>
+<td>The ordered relationship between sub-tasks — defines what can run in parallel</td>
+</tr>
+<tr>
+<td>Hybrid routing</td>
+<td>Using local models for worker tasks and cloud models for orchestration</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="full-code">Full Code</h2>
+<div class="language-python highlight"><span class="filename">01_orchestrated_agent.py</span><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="sd">Orchestrated Multi-Agent System — Phase 5</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="sd">Architecture:</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="sd">  Gemma 4 26B (orchestrator) — decomposes the task, synthesises final output</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="sd">  Gemma 4 E2B / 26B (workers) — execute sub-tasks locally, routed by task type</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="sd">Flow:</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="sd">  1. User submits a complex, multi-part task</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="sd">  2. Gemma 26B decomposes it into typed, sequenced sub-tasks (JSON)</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="sd">  3. Each sub-task is routed to E2B (factual/summarise) or 26B (reasoning/code)</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="sd">  4. Workers execute sub-tasks; results stored in shared state</span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="sd">  5. Dependent sub-tasks receive prior results as context</span>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="sd">  6. Gemma 26B synthesises all worker outputs into a final response</span>
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
+</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="sd">Fully local — no cloud API required.</span>
+</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>
+</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+</span><span id="__span-10-20"><a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+</span><span id="__span-10-21"><a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+</span><span id="__span-10-22"><a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>
+</span><span id="__span-10-23"><a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="n">OLLAMA_URL</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:11434/api/chat&quot;</span>
+</span><span id="__span-10-24"><a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>
+</span><span id="__span-10-25"><a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="n">ORCHESTRATOR_MODEL</span> <span class="o">=</span> <span class="s2">&quot;gemma4:26b&quot;</span>
+</span><span id="__span-10-26"><a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>
+</span><span id="__span-10-27"><a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="n">LOCAL_ROUTING</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-10-28"><a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>    <span class="s2">&quot;factual&quot;</span><span class="p">:</span>   <span class="s2">&quot;gemma4:e2b&quot;</span><span class="p">,</span>
+</span><span id="__span-10-29"><a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>    <span class="s2">&quot;summarise&quot;</span><span class="p">:</span> <span class="s2">&quot;gemma4:e2b&quot;</span><span class="p">,</span>
+</span><span id="__span-10-30"><a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>    <span class="s2">&quot;classify&quot;</span><span class="p">:</span>  <span class="s2">&quot;gemma4:e2b&quot;</span><span class="p">,</span>
+</span><span id="__span-10-31"><a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a>    <span class="s2">&quot;reasoning&quot;</span><span class="p">:</span> <span class="s2">&quot;gemma4:26b&quot;</span><span class="p">,</span>
+</span><span id="__span-10-32"><a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>    <span class="s2">&quot;code&quot;</span><span class="p">:</span>      <span class="s2">&quot;gemma4:26b&quot;</span><span class="p">,</span>
+</span><span id="__span-10-33"><a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a><span class="p">}</span>
+</span><span id="__span-10-34"><a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a>
+</span><span id="__span-10-35"><a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a><span class="c1"># -------------------------------------------------------------------</span>
+</span><span id="__span-10-36"><a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a><span class="c1"># OLLAMA CALL — shared by orchestrator and workers</span>
+</span><span id="__span-10-37"><a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a><span class="c1"># -------------------------------------------------------------------</span>
+</span><span id="__span-10-38"><a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a>
+</span><span id="__span-10-39"><a id="__codelineno-10-39" name="__codelineno-10-39" href="#__codelineno-10-39"></a><span class="k">def</span><span class="w"> </span><span class="nf">call_ollama</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_tokens</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1500</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-10-40"><a id="__codelineno-10-40" name="__codelineno-10-40" href="#__codelineno-10-40"></a>    <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-10-41"><a id="__codelineno-10-41" name="__codelineno-10-41" href="#__codelineno-10-41"></a>        <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">model</span><span class="p">,</span>
+</span><span id="__span-10-42"><a id="__codelineno-10-42" name="__codelineno-10-42" href="#__codelineno-10-42"></a>        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">}],</span>
+</span><span id="__span-10-43"><a id="__codelineno-10-43" name="__codelineno-10-43" href="#__codelineno-10-43"></a>        <span class="s2">&quot;stream&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-10-44"><a id="__codelineno-10-44" name="__codelineno-10-44" href="#__codelineno-10-44"></a>        <span class="s2">&quot;think&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-10-45"><a id="__codelineno-10-45" name="__codelineno-10-45" href="#__codelineno-10-45"></a>        <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-10-46"><a id="__codelineno-10-46" name="__codelineno-10-46" href="#__codelineno-10-46"></a>            <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+</span><span id="__span-10-47"><a id="__codelineno-10-47" name="__codelineno-10-47" href="#__codelineno-10-47"></a>            <span class="s2">&quot;num_predict&quot;</span><span class="p">:</span> <span class="n">max_tokens</span><span class="p">,</span>
+</span><span id="__span-10-48"><a id="__codelineno-10-48" name="__codelineno-10-48" href="#__codelineno-10-48"></a>            <span class="s2">&quot;num_ctx&quot;</span><span class="p">:</span> <span class="mi">8192</span><span class="p">,</span>
+</span><span id="__span-10-49"><a id="__codelineno-10-49" name="__codelineno-10-49" href="#__codelineno-10-49"></a>        <span class="p">},</span>
+</span><span id="__span-10-50"><a id="__codelineno-10-50" name="__codelineno-10-50" href="#__codelineno-10-50"></a>    <span class="p">}</span>
+</span><span id="__span-10-51"><a id="__codelineno-10-51" name="__codelineno-10-51" href="#__codelineno-10-51"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">OLLAMA_URL</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">180</span><span class="p">)</span>
+</span><span id="__span-10-52"><a id="__codelineno-10-52" name="__codelineno-10-52" href="#__codelineno-10-52"></a>    <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+</span><span id="__span-10-53"><a id="__codelineno-10-53" name="__codelineno-10-53" href="#__codelineno-10-53"></a>    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;message&quot;</span><span class="p">][</span><span class="s2">&quot;content&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span><span id="__span-10-54"><a id="__codelineno-10-54" name="__codelineno-10-54" href="#__codelineno-10-54"></a>
+</span><span id="__span-10-55"><a id="__codelineno-10-55" name="__codelineno-10-55" href="#__codelineno-10-55"></a>
+</span><span id="__span-10-56"><a id="__codelineno-10-56" name="__codelineno-10-56" href="#__codelineno-10-56"></a><span class="c1"># -------------------------------------------------------------------</span>
+</span><span id="__span-10-57"><a id="__codelineno-10-57" name="__codelineno-10-57" href="#__codelineno-10-57"></a><span class="c1"># ORCHESTRATOR — Gemma 26B</span>
+</span><span id="__span-10-58"><a id="__codelineno-10-58" name="__codelineno-10-58" href="#__codelineno-10-58"></a><span class="c1"># -------------------------------------------------------------------</span>
+</span><span id="__span-10-59"><a id="__codelineno-10-59" name="__codelineno-10-59" href="#__codelineno-10-59"></a>
+</span><span id="__span-10-60"><a id="__codelineno-10-60" name="__codelineno-10-60" href="#__codelineno-10-60"></a><span class="n">DECOMPOSE_PROMPT</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;You are a task orchestrator. Break the user&#39;s request into atomic sub-tasks</span>
+</span><span id="__span-10-61"><a id="__codelineno-10-61" name="__codelineno-10-61" href="#__codelineno-10-61"></a><span class="s2">that can be executed by worker agents.</span>
+</span><span id="__span-10-62"><a id="__codelineno-10-62" name="__codelineno-10-62" href="#__codelineno-10-62"></a>
+</span><span id="__span-10-63"><a id="__codelineno-10-63" name="__codelineno-10-63" href="#__codelineno-10-63"></a><span class="s2">Return ONLY a JSON array. No explanation, no markdown fences, no code block. Raw JSON only.</span>
+</span><span id="__span-10-64"><a id="__codelineno-10-64" name="__codelineno-10-64" href="#__codelineno-10-64"></a>
+</span><span id="__span-10-65"><a id="__codelineno-10-65" name="__codelineno-10-65" href="#__codelineno-10-65"></a><span class="s2">Each sub-task must have:</span>
+</span><span id="__span-10-66"><a id="__codelineno-10-66" name="__codelineno-10-66" href="#__codelineno-10-66"></a><span class="s2">  - id: integer starting at 1</span>
+</span><span id="__span-10-67"><a id="__codelineno-10-67" name="__codelineno-10-67" href="#__codelineno-10-67"></a><span class="s2">  - task: clear, self-contained instruction for the worker</span>
+</span><span id="__span-10-68"><a id="__codelineno-10-68" name="__codelineno-10-68" href="#__codelineno-10-68"></a><span class="s2">  - type: one of &quot;factual&quot; | &quot;summarise&quot; | &quot;reasoning&quot; | &quot;code&quot; | &quot;classify&quot;</span>
+</span><span id="__span-10-69"><a id="__codelineno-10-69" name="__codelineno-10-69" href="#__codelineno-10-69"></a><span class="s2">  - depends_on: list of task IDs this task must wait for (empty list if none)</span>
+</span><span id="__span-10-70"><a id="__codelineno-10-70" name="__codelineno-10-70" href="#__codelineno-10-70"></a><span class="s2">  - output_format: the exact format the worker should return (e.g. &quot;plain text&quot;, &quot;Python code only&quot;)</span>
+</span><span id="__span-10-71"><a id="__codelineno-10-71" name="__codelineno-10-71" href="#__codelineno-10-71"></a>
+</span><span id="__span-10-72"><a id="__codelineno-10-72" name="__codelineno-10-72" href="#__codelineno-10-72"></a><span class="s2">Rules:</span>
+</span><span id="__span-10-73"><a id="__codelineno-10-73" name="__codelineno-10-73" href="#__codelineno-10-73"></a><span class="s2">  - Keep sub-tasks narrow — one clear action each</span>
+</span><span id="__span-10-74"><a id="__codelineno-10-74" name="__codelineno-10-74" href="#__codelineno-10-74"></a><span class="s2">  - Mark dependencies explicitly — a task that needs a prior result must list it in depends_on</span>
+</span><span id="__span-10-75"><a id="__codelineno-10-75" name="__codelineno-10-75" href="#__codelineno-10-75"></a><span class="s2">  - Do not create more than 6 sub-tasks</span>
+</span><span id="__span-10-76"><a id="__codelineno-10-76" name="__codelineno-10-76" href="#__codelineno-10-76"></a>
+</span><span id="__span-10-77"><a id="__codelineno-10-77" name="__codelineno-10-77" href="#__codelineno-10-77"></a><span class="s2">User request:</span>
+</span><span id="__span-10-78"><a id="__codelineno-10-78" name="__codelineno-10-78" href="#__codelineno-10-78"></a><span class="si">{user_request}</span><span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-10-79"><a id="__codelineno-10-79" name="__codelineno-10-79" href="#__codelineno-10-79"></a>
+</span><span id="__span-10-80"><a id="__codelineno-10-80" name="__codelineno-10-80" href="#__codelineno-10-80"></a>
+</span><span id="__span-10-81"><a id="__codelineno-10-81" name="__codelineno-10-81" href="#__codelineno-10-81"></a><span class="n">SYNTHESISE_PROMPT</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;You are writing the final response to a user&#39;s request.</span>
+</span><span id="__span-10-82"><a id="__codelineno-10-82" name="__codelineno-10-82" href="#__codelineno-10-82"></a>
+</span><span id="__span-10-83"><a id="__codelineno-10-83" name="__codelineno-10-83" href="#__codelineno-10-83"></a><span class="s2">The request was decomposed into sub-tasks and each was handled by a worker.</span>
+</span><span id="__span-10-84"><a id="__codelineno-10-84" name="__codelineno-10-84" href="#__codelineno-10-84"></a><span class="s2">Use the worker results below to write a single, coherent, well-structured response.</span>
+</span><span id="__span-10-85"><a id="__codelineno-10-85" name="__codelineno-10-85" href="#__codelineno-10-85"></a>
+</span><span id="__span-10-86"><a id="__codelineno-10-86" name="__codelineno-10-86" href="#__codelineno-10-86"></a><span class="s2">Original request:</span>
+</span><span id="__span-10-87"><a id="__codelineno-10-87" name="__codelineno-10-87" href="#__codelineno-10-87"></a><span class="si">{user_request}</span>
+</span><span id="__span-10-88"><a id="__codelineno-10-88" name="__codelineno-10-88" href="#__codelineno-10-88"></a>
+</span><span id="__span-10-89"><a id="__codelineno-10-89" name="__codelineno-10-89" href="#__codelineno-10-89"></a><span class="s2">Worker results:</span>
+</span><span id="__span-10-90"><a id="__codelineno-10-90" name="__codelineno-10-90" href="#__codelineno-10-90"></a><span class="si">{worker_results}</span>
+</span><span id="__span-10-91"><a id="__codelineno-10-91" name="__codelineno-10-91" href="#__codelineno-10-91"></a>
+</span><span id="__span-10-92"><a id="__codelineno-10-92" name="__codelineno-10-92" href="#__codelineno-10-92"></a><span class="s2">Write the final response now. Be clear and direct.&quot;&quot;&quot;</span>
+</span><span id="__span-10-93"><a id="__codelineno-10-93" name="__codelineno-10-93" href="#__codelineno-10-93"></a>
+</span><span id="__span-10-94"><a id="__codelineno-10-94" name="__codelineno-10-94" href="#__codelineno-10-94"></a>
+</span><span id="__span-10-95"><a id="__codelineno-10-95" name="__codelineno-10-95" href="#__codelineno-10-95"></a><span class="k">def</span><span class="w"> </span><span class="nf">decompose_task</span><span class="p">(</span><span class="n">user_request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+</span><span id="__span-10-96"><a id="__codelineno-10-96" name="__codelineno-10-96" href="#__codelineno-10-96"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Uses Gemma 26B to decompose the user request into sub-tasks.&quot;&quot;&quot;</span>
+</span><span id="__span-10-97"><a id="__codelineno-10-97" name="__codelineno-10-97" href="#__codelineno-10-97"></a>    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+</span><span id="__span-10-98"><a id="__codelineno-10-98" name="__codelineno-10-98" href="#__codelineno-10-98"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Orchestrator: </span><span class="si">{</span><span class="n">ORCHESTRATOR_MODEL</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-10-99"><a id="__codelineno-10-99" name="__codelineno-10-99" href="#__codelineno-10-99"></a>
+</span><span id="__span-10-100"><a id="__codelineno-10-100" name="__codelineno-10-100" href="#__codelineno-10-100"></a>    <span class="n">raw</span> <span class="o">=</span> <span class="n">call_ollama</span><span class="p">(</span>
+</span><span id="__span-10-101"><a id="__codelineno-10-101" name="__codelineno-10-101" href="#__codelineno-10-101"></a>        <span class="n">ORCHESTRATOR_MODEL</span><span class="p">,</span>
+</span><span id="__span-10-102"><a id="__codelineno-10-102" name="__codelineno-10-102" href="#__codelineno-10-102"></a>        <span class="n">DECOMPOSE_PROMPT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_request</span><span class="o">=</span><span class="n">user_request</span><span class="p">),</span>
+</span><span id="__span-10-103"><a id="__codelineno-10-103" name="__codelineno-10-103" href="#__codelineno-10-103"></a>        <span class="n">max_tokens</span><span class="o">=</span><span class="mi">1200</span><span class="p">,</span>
+</span><span id="__span-10-104"><a id="__codelineno-10-104" name="__codelineno-10-104" href="#__codelineno-10-104"></a>    <span class="p">)</span>
+</span><span id="__span-10-105"><a id="__codelineno-10-105" name="__codelineno-10-105" href="#__codelineno-10-105"></a>
+</span><span id="__span-10-106"><a id="__codelineno-10-106" name="__codelineno-10-106" href="#__codelineno-10-106"></a>    <span class="c1"># Strip any accidental markdown fences Gemma may add</span>
+</span><span id="__span-10-107"><a id="__codelineno-10-107" name="__codelineno-10-107" href="#__codelineno-10-107"></a>    <span class="n">cleaned</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span><span id="__span-10-108"><a id="__codelineno-10-108" name="__codelineno-10-108" href="#__codelineno-10-108"></a>    <span class="k">if</span> <span class="n">cleaned</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;```&quot;</span><span class="p">):</span>
+</span><span id="__span-10-109"><a id="__codelineno-10-109" name="__codelineno-10-109" href="#__codelineno-10-109"></a>        <span class="n">cleaned</span> <span class="o">=</span> <span class="n">cleaned</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;```&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+</span><span id="__span-10-110"><a id="__codelineno-10-110" name="__codelineno-10-110" href="#__codelineno-10-110"></a>        <span class="k">if</span> <span class="n">cleaned</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;json&quot;</span><span class="p">):</span>
+</span><span id="__span-10-111"><a id="__codelineno-10-111" name="__codelineno-10-111" href="#__codelineno-10-111"></a>            <span class="n">cleaned</span> <span class="o">=</span> <span class="n">cleaned</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span>
+</span><span id="__span-10-112"><a id="__codelineno-10-112" name="__codelineno-10-112" href="#__codelineno-10-112"></a>        <span class="n">cleaned</span> <span class="o">=</span> <span class="n">cleaned</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span><span id="__span-10-113"><a id="__codelineno-10-113" name="__codelineno-10-113" href="#__codelineno-10-113"></a>
+</span><span id="__span-10-114"><a id="__codelineno-10-114" name="__codelineno-10-114" href="#__codelineno-10-114"></a>    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">cleaned</span><span class="p">)</span>
+</span><span id="__span-10-115"><a id="__codelineno-10-115" name="__codelineno-10-115" href="#__codelineno-10-115"></a>
+</span><span id="__span-10-116"><a id="__codelineno-10-116" name="__codelineno-10-116" href="#__codelineno-10-116"></a>
+</span><span id="__span-10-117"><a id="__codelineno-10-117" name="__codelineno-10-117" href="#__codelineno-10-117"></a><span class="k">def</span><span class="w"> </span><span class="nf">synthesise</span><span class="p">(</span><span class="n">user_request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">shared_state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-10-118"><a id="__codelineno-10-118" name="__codelineno-10-118" href="#__codelineno-10-118"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Uses Gemma 26B to synthesise worker outputs into a final response.&quot;&quot;&quot;</span>
+</span><span id="__span-10-119"><a id="__codelineno-10-119" name="__codelineno-10-119" href="#__codelineno-10-119"></a>    <span class="n">results_text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+</span><span id="__span-10-120"><a id="__codelineno-10-120" name="__codelineno-10-120" href="#__codelineno-10-120"></a>        <span class="sa">f</span><span class="s2">&quot;Sub-task </span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;output&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;success&quot;</span>
+</span><span id="__span-10-121"><a id="__codelineno-10-121" name="__codelineno-10-121" href="#__codelineno-10-121"></a>        <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;Sub-task </span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">: FAILED — </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;unknown error&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-10-122"><a id="__codelineno-10-122" name="__codelineno-10-122" href="#__codelineno-10-122"></a>        <span class="k">for</span> <span class="n">tid</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">shared_state</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+</span><span id="__span-10-123"><a id="__codelineno-10-123" name="__codelineno-10-123" href="#__codelineno-10-123"></a>    <span class="p">)</span>
+</span><span id="__span-10-124"><a id="__codelineno-10-124" name="__codelineno-10-124" href="#__codelineno-10-124"></a>
+</span><span id="__span-10-125"><a id="__codelineno-10-125" name="__codelineno-10-125" href="#__codelineno-10-125"></a>    <span class="k">return</span> <span class="n">call_ollama</span><span class="p">(</span>
+</span><span id="__span-10-126"><a id="__codelineno-10-126" name="__codelineno-10-126" href="#__codelineno-10-126"></a>        <span class="n">ORCHESTRATOR_MODEL</span><span class="p">,</span>
+</span><span id="__span-10-127"><a id="__codelineno-10-127" name="__codelineno-10-127" href="#__codelineno-10-127"></a>        <span class="n">SYNTHESISE_PROMPT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+</span><span id="__span-10-128"><a id="__codelineno-10-128" name="__codelineno-10-128" href="#__codelineno-10-128"></a>            <span class="n">user_request</span><span class="o">=</span><span class="n">user_request</span><span class="p">,</span>
+</span><span id="__span-10-129"><a id="__codelineno-10-129" name="__codelineno-10-129" href="#__codelineno-10-129"></a>            <span class="n">worker_results</span><span class="o">=</span><span class="n">results_text</span><span class="p">,</span>
+</span><span id="__span-10-130"><a id="__codelineno-10-130" name="__codelineno-10-130" href="#__codelineno-10-130"></a>        <span class="p">),</span>
+</span><span id="__span-10-131"><a id="__codelineno-10-131" name="__codelineno-10-131" href="#__codelineno-10-131"></a>        <span class="n">max_tokens</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+</span><span id="__span-10-132"><a id="__codelineno-10-132" name="__codelineno-10-132" href="#__codelineno-10-132"></a>    <span class="p">)</span>
+</span><span id="__span-10-133"><a id="__codelineno-10-133" name="__codelineno-10-133" href="#__codelineno-10-133"></a>
+</span><span id="__span-10-134"><a id="__codelineno-10-134" name="__codelineno-10-134" href="#__codelineno-10-134"></a>
+</span><span id="__span-10-135"><a id="__codelineno-10-135" name="__codelineno-10-135" href="#__codelineno-10-135"></a><span class="c1"># -------------------------------------------------------------------</span>
+</span><span id="__span-10-136"><a id="__codelineno-10-136" name="__codelineno-10-136" href="#__codelineno-10-136"></a><span class="c1"># WORKER — Gemma E2B or 26B depending on task type</span>
+</span><span id="__span-10-137"><a id="__codelineno-10-137" name="__codelineno-10-137" href="#__codelineno-10-137"></a><span class="c1"># -------------------------------------------------------------------</span>
+</span><span id="__span-10-138"><a id="__codelineno-10-138" name="__codelineno-10-138" href="#__codelineno-10-138"></a>
+</span><span id="__span-10-139"><a id="__codelineno-10-139" name="__codelineno-10-139" href="#__codelineno-10-139"></a><span class="k">def</span><span class="w"> </span><span class="nf">build_worker_prompt</span><span class="p">(</span><span class="n">sub_task</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-10-140"><a id="__codelineno-10-140" name="__codelineno-10-140" href="#__codelineno-10-140"></a>    <span class="n">base</span> <span class="o">=</span> <span class="n">sub_task</span><span class="p">[</span><span class="s2">&quot;task&quot;</span><span class="p">]</span>
+</span><span id="__span-10-141"><a id="__codelineno-10-141" name="__codelineno-10-141" href="#__codelineno-10-141"></a>    <span class="n">fmt</span>  <span class="o">=</span> <span class="n">sub_task</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output_format&quot;</span><span class="p">,</span> <span class="s2">&quot;plain text&quot;</span><span class="p">)</span>
+</span><span id="__span-10-142"><a id="__codelineno-10-142" name="__codelineno-10-142" href="#__codelineno-10-142"></a>    <span class="k">if</span> <span class="n">context</span><span class="p">:</span>
+</span><span id="__span-10-143"><a id="__codelineno-10-143" name="__codelineno-10-143" href="#__codelineno-10-143"></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Context from previous steps:</span><span class="se">\n</span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Respond in: </span><span class="si">{</span><span class="n">fmt</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-10-144"><a id="__codelineno-10-144" name="__codelineno-10-144" href="#__codelineno-10-144"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">Respond in: </span><span class="si">{</span><span class="n">fmt</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-10-145"><a id="__codelineno-10-145" name="__codelineno-10-145" href="#__codelineno-10-145"></a>
+</span><span id="__span-10-146"><a id="__codelineno-10-146" name="__codelineno-10-146" href="#__codelineno-10-146"></a>
+</span><span id="__span-10-147"><a id="__codelineno-10-147" name="__codelineno-10-147" href="#__codelineno-10-147"></a><span class="k">def</span><span class="w"> </span><span class="nf">run_worker</span><span class="p">(</span><span class="n">sub_task</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="__span-10-148"><a id="__codelineno-10-148" name="__codelineno-10-148" href="#__codelineno-10-148"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Executes a single sub-task on the appropriate local model.&quot;&quot;&quot;</span>
+</span><span id="__span-10-149"><a id="__codelineno-10-149" name="__codelineno-10-149" href="#__codelineno-10-149"></a>    <span class="n">task_type</span> <span class="o">=</span> <span class="n">sub_task</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;factual&quot;</span><span class="p">)</span>
+</span><span id="__span-10-150"><a id="__codelineno-10-150" name="__codelineno-10-150" href="#__codelineno-10-150"></a>    <span class="n">model</span>     <span class="o">=</span> <span class="n">LOCAL_ROUTING</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">task_type</span><span class="p">,</span> <span class="s2">&quot;gemma4:26b&quot;</span><span class="p">)</span>
+</span><span id="__span-10-151"><a id="__codelineno-10-151" name="__codelineno-10-151" href="#__codelineno-10-151"></a>    <span class="n">prompt</span>    <span class="o">=</span> <span class="n">build_worker_prompt</span><span class="p">(</span><span class="n">sub_task</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+</span><span id="__span-10-152"><a id="__codelineno-10-152" name="__codelineno-10-152" href="#__codelineno-10-152"></a>
+</span><span id="__span-10-153"><a id="__codelineno-10-153" name="__codelineno-10-153" href="#__codelineno-10-153"></a>    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+</span><span id="__span-10-154"><a id="__codelineno-10-154" name="__codelineno-10-154" href="#__codelineno-10-154"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Model : </span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-10-155"><a id="__codelineno-10-155" name="__codelineno-10-155" href="#__codelineno-10-155"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Task  : </span><span class="si">{</span><span class="n">sub_task</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][:</span><span class="mi">80</span><span class="p">]</span><span class="si">}{</span><span class="s1">&#39;...&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">sub_task</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">])</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">80</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-10-156"><a id="__codelineno-10-156" name="__codelineno-10-156" href="#__codelineno-10-156"></a>
+</span><span id="__span-10-157"><a id="__codelineno-10-157" name="__codelineno-10-157" href="#__codelineno-10-157"></a>    <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-10-158"><a id="__codelineno-10-158" name="__codelineno-10-158" href="#__codelineno-10-158"></a>        <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">model</span><span class="p">,</span>
+</span><span id="__span-10-159"><a id="__codelineno-10-159" name="__codelineno-10-159" href="#__codelineno-10-159"></a>        <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">}],</span>
+</span><span id="__span-10-160"><a id="__codelineno-10-160" name="__codelineno-10-160" href="#__codelineno-10-160"></a>        <span class="s2">&quot;stream&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-10-161"><a id="__codelineno-10-161" name="__codelineno-10-161" href="#__codelineno-10-161"></a>        <span class="s2">&quot;think&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-10-162"><a id="__codelineno-10-162" name="__codelineno-10-162" href="#__codelineno-10-162"></a>        <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="__span-10-163"><a id="__codelineno-10-163" name="__codelineno-10-163" href="#__codelineno-10-163"></a>            <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+</span><span id="__span-10-164"><a id="__codelineno-10-164" name="__codelineno-10-164" href="#__codelineno-10-164"></a>            <span class="s2">&quot;num_predict&quot;</span><span class="p">:</span> <span class="mi">800</span><span class="p">,</span>
+</span><span id="__span-10-165"><a id="__codelineno-10-165" name="__codelineno-10-165" href="#__codelineno-10-165"></a>            <span class="s2">&quot;num_ctx&quot;</span><span class="p">:</span> <span class="mi">8192</span><span class="p">,</span>
+</span><span id="__span-10-166"><a id="__codelineno-10-166" name="__codelineno-10-166" href="#__codelineno-10-166"></a>        <span class="p">},</span>
+</span><span id="__span-10-167"><a id="__codelineno-10-167" name="__codelineno-10-167" href="#__codelineno-10-167"></a>    <span class="p">}</span>
+</span><span id="__span-10-168"><a id="__codelineno-10-168" name="__codelineno-10-168" href="#__codelineno-10-168"></a>
+</span><span id="__span-10-169"><a id="__codelineno-10-169" name="__codelineno-10-169" href="#__codelineno-10-169"></a>    <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+</span><span id="__span-10-170"><a id="__codelineno-10-170" name="__codelineno-10-170" href="#__codelineno-10-170"></a>    <span class="k">try</span><span class="p">:</span>
+</span><span id="__span-10-171"><a id="__codelineno-10-171" name="__codelineno-10-171" href="#__codelineno-10-171"></a>        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">OLLAMA_URL</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">180</span><span class="p">)</span>
+</span><span id="__span-10-172"><a id="__codelineno-10-172" name="__codelineno-10-172" href="#__codelineno-10-172"></a>        <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+</span><span id="__span-10-173"><a id="__codelineno-10-173" name="__codelineno-10-173" href="#__codelineno-10-173"></a>        <span class="n">data</span>       <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</span><span id="__span-10-174"><a id="__codelineno-10-174" name="__codelineno-10-174" href="#__codelineno-10-174"></a>        <span class="n">output</span>     <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">][</span><span class="s2">&quot;content&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+</span><span id="__span-10-175"><a id="__codelineno-10-175" name="__codelineno-10-175" href="#__codelineno-10-175"></a>        <span class="n">duration</span>   <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-10-176"><a id="__codelineno-10-176" name="__codelineno-10-176" href="#__codelineno-10-176"></a>        <span class="n">eval_count</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eval_count&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span><span id="__span-10-177"><a id="__codelineno-10-177" name="__codelineno-10-177" href="#__codelineno-10-177"></a>        <span class="n">eval_ms</span>    <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eval_duration&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1_000_000</span>
+</span><span id="__span-10-178"><a id="__codelineno-10-178" name="__codelineno-10-178" href="#__codelineno-10-178"></a>        <span class="n">tps</span>        <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">eval_count</span> <span class="o">/</span> <span class="p">(</span><span class="n">eval_ms</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">eval_ms</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+</span><span id="__span-10-179"><a id="__codelineno-10-179" name="__codelineno-10-179" href="#__codelineno-10-179"></a>
+</span><span id="__span-10-180"><a id="__codelineno-10-180" name="__codelineno-10-180" href="#__codelineno-10-180"></a>        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+</span><span id="__span-10-181"><a id="__codelineno-10-181" name="__codelineno-10-181" href="#__codelineno-10-181"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Result: </span><span class="si">{</span><span class="n">output</span><span class="p">[:</span><span class="mi">120</span><span class="p">]</span><span class="si">}{</span><span class="s1">&#39;...&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">120</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-10-182"><a id="__codelineno-10-182" name="__codelineno-10-182" href="#__codelineno-10-182"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Stats : </span><span class="si">{</span><span class="n">duration</span><span class="si">}</span><span class="s2">ms | </span><span class="si">{</span><span class="n">tps</span><span class="si">}</span><span class="s2"> tok/s | </span><span class="si">{</span><span class="n">eval_count</span><span class="si">}</span><span class="s2"> tokens&quot;</span><span class="p">)</span>
+</span><span id="__span-10-183"><a id="__codelineno-10-183" name="__codelineno-10-183" href="#__codelineno-10-183"></a>
+</span><span id="__span-10-184"><a id="__codelineno-10-184" name="__codelineno-10-184" href="#__codelineno-10-184"></a>        <span class="k">return</span> <span class="p">{</span>
+</span><span id="__span-10-185"><a id="__codelineno-10-185" name="__codelineno-10-185" href="#__codelineno-10-185"></a>            <span class="s2">&quot;id&quot;</span><span class="p">:</span>          <span class="n">sub_task</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span>
+</span><span id="__span-10-186"><a id="__codelineno-10-186" name="__codelineno-10-186" href="#__codelineno-10-186"></a>            <span class="s2">&quot;status&quot;</span><span class="p">:</span>      <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+</span><span id="__span-10-187"><a id="__codelineno-10-187" name="__codelineno-10-187" href="#__codelineno-10-187"></a>            <span class="s2">&quot;output&quot;</span><span class="p">:</span>      <span class="n">output</span><span class="p">,</span>
+</span><span id="__span-10-188"><a id="__codelineno-10-188" name="__codelineno-10-188" href="#__codelineno-10-188"></a>            <span class="s2">&quot;model&quot;</span><span class="p">:</span>       <span class="n">model</span><span class="p">,</span>
+</span><span id="__span-10-189"><a id="__codelineno-10-189" name="__codelineno-10-189" href="#__codelineno-10-189"></a>            <span class="s2">&quot;tokens&quot;</span><span class="p">:</span>      <span class="n">eval_count</span><span class="p">,</span>
+</span><span id="__span-10-190"><a id="__codelineno-10-190" name="__codelineno-10-190" href="#__codelineno-10-190"></a>            <span class="s2">&quot;duration_ms&quot;</span><span class="p">:</span> <span class="n">duration</span><span class="p">,</span>
+</span><span id="__span-10-191"><a id="__codelineno-10-191" name="__codelineno-10-191" href="#__codelineno-10-191"></a>            <span class="s2">&quot;tps&quot;</span><span class="p">:</span>         <span class="n">tps</span><span class="p">,</span>
+</span><span id="__span-10-192"><a id="__codelineno-10-192" name="__codelineno-10-192" href="#__codelineno-10-192"></a>        <span class="p">}</span>
+</span><span id="__span-10-193"><a id="__codelineno-10-193" name="__codelineno-10-193" href="#__codelineno-10-193"></a>
+</span><span id="__span-10-194"><a id="__codelineno-10-194" name="__codelineno-10-194" href="#__codelineno-10-194"></a>    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="__span-10-195"><a id="__codelineno-10-195" name="__codelineno-10-195" href="#__codelineno-10-195"></a>        <span class="n">duration</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-10-196"><a id="__codelineno-10-196" name="__codelineno-10-196" href="#__codelineno-10-196"></a>        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+</span><span id="__span-10-197"><a id="__codelineno-10-197" name="__codelineno-10-197" href="#__codelineno-10-197"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    ERROR : </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-10-198"><a id="__codelineno-10-198" name="__codelineno-10-198" href="#__codelineno-10-198"></a>        <span class="k">return</span> <span class="p">{</span>
+</span><span id="__span-10-199"><a id="__codelineno-10-199" name="__codelineno-10-199" href="#__codelineno-10-199"></a>            <span class="s2">&quot;id&quot;</span><span class="p">:</span>          <span class="n">sub_task</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span>
+</span><span id="__span-10-200"><a id="__codelineno-10-200" name="__codelineno-10-200" href="#__codelineno-10-200"></a>            <span class="s2">&quot;status&quot;</span><span class="p">:</span>      <span class="s2">&quot;error&quot;</span><span class="p">,</span>
+</span><span id="__span-10-201"><a id="__codelineno-10-201" name="__codelineno-10-201" href="#__codelineno-10-201"></a>            <span class="s2">&quot;error&quot;</span><span class="p">:</span>       <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+</span><span id="__span-10-202"><a id="__codelineno-10-202" name="__codelineno-10-202" href="#__codelineno-10-202"></a>            <span class="s2">&quot;model&quot;</span><span class="p">:</span>       <span class="n">model</span><span class="p">,</span>
+</span><span id="__span-10-203"><a id="__codelineno-10-203" name="__codelineno-10-203" href="#__codelineno-10-203"></a>            <span class="s2">&quot;duration_ms&quot;</span><span class="p">:</span> <span class="n">duration</span><span class="p">,</span>
+</span><span id="__span-10-204"><a id="__codelineno-10-204" name="__codelineno-10-204" href="#__codelineno-10-204"></a>        <span class="p">}</span>
+</span><span id="__span-10-205"><a id="__codelineno-10-205" name="__codelineno-10-205" href="#__codelineno-10-205"></a>
+</span><span id="__span-10-206"><a id="__codelineno-10-206" name="__codelineno-10-206" href="#__codelineno-10-206"></a>
+</span><span id="__span-10-207"><a id="__codelineno-10-207" name="__codelineno-10-207" href="#__codelineno-10-207"></a><span class="c1"># -------------------------------------------------------------------</span>
+</span><span id="__span-10-208"><a id="__codelineno-10-208" name="__codelineno-10-208" href="#__codelineno-10-208"></a><span class="c1"># EXECUTION ENGINE — resolves dependencies, runs sub-tasks in order</span>
+</span><span id="__span-10-209"><a id="__codelineno-10-209" name="__codelineno-10-209" href="#__codelineno-10-209"></a><span class="c1"># -------------------------------------------------------------------</span>
+</span><span id="__span-10-210"><a id="__codelineno-10-210" name="__codelineno-10-210" href="#__codelineno-10-210"></a>
+</span><span id="__span-10-211"><a id="__codelineno-10-211" name="__codelineno-10-211" href="#__codelineno-10-211"></a><span class="k">def</span><span class="w"> </span><span class="nf">build_context</span><span class="p">(</span><span class="n">sub_task</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">shared_state</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-10-212"><a id="__codelineno-10-212" name="__codelineno-10-212" href="#__codelineno-10-212"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Assembles context from prior worker outputs for dependent tasks.&quot;&quot;&quot;</span>
+</span><span id="__span-10-213"><a id="__codelineno-10-213" name="__codelineno-10-213" href="#__codelineno-10-213"></a>    <span class="n">dep_ids</span> <span class="o">=</span> <span class="n">sub_task</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;depends_on&quot;</span><span class="p">,</span> <span class="p">[])</span>
+</span><span id="__span-10-214"><a id="__codelineno-10-214" name="__codelineno-10-214" href="#__codelineno-10-214"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">dep_ids</span><span class="p">:</span>
+</span><span id="__span-10-215"><a id="__codelineno-10-215" name="__codelineno-10-215" href="#__codelineno-10-215"></a>        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+</span><span id="__span-10-216"><a id="__codelineno-10-216" name="__codelineno-10-216" href="#__codelineno-10-216"></a>    <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-10-217"><a id="__codelineno-10-217" name="__codelineno-10-217" href="#__codelineno-10-217"></a>        <span class="sa">f</span><span class="s2">&quot;[Task </span><span class="si">{</span><span class="n">dep_id</span><span class="si">}</span><span class="s2"> output]</span><span class="se">\n</span><span class="si">{</span><span class="n">shared_state</span><span class="p">[</span><span class="n">dep_id</span><span class="p">][</span><span class="s1">&#39;output&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-10-218"><a id="__codelineno-10-218" name="__codelineno-10-218" href="#__codelineno-10-218"></a>        <span class="k">for</span> <span class="n">dep_id</span> <span class="ow">in</span> <span class="n">dep_ids</span>
+</span><span id="__span-10-219"><a id="__codelineno-10-219" name="__codelineno-10-219" href="#__codelineno-10-219"></a>        <span class="k">if</span> <span class="n">dep_id</span> <span class="ow">in</span> <span class="n">shared_state</span> <span class="ow">and</span> <span class="n">shared_state</span><span class="p">[</span><span class="n">dep_id</span><span class="p">][</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;success&quot;</span>
+</span><span id="__span-10-220"><a id="__codelineno-10-220" name="__codelineno-10-220" href="#__codelineno-10-220"></a>    <span class="p">]</span>
+</span><span id="__span-10-221"><a id="__codelineno-10-221" name="__codelineno-10-221" href="#__codelineno-10-221"></a>    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+</span><span id="__span-10-222"><a id="__codelineno-10-222" name="__codelineno-10-222" href="#__codelineno-10-222"></a>
+</span><span id="__span-10-223"><a id="__codelineno-10-223" name="__codelineno-10-223" href="#__codelineno-10-223"></a>
+</span><span id="__span-10-224"><a id="__codelineno-10-224" name="__codelineno-10-224" href="#__codelineno-10-224"></a><span class="k">def</span><span class="w"> </span><span class="nf">execute_plan</span><span class="p">(</span><span class="n">sub_tasks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="__span-10-225"><a id="__codelineno-10-225" name="__codelineno-10-225" href="#__codelineno-10-225"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Executes all sub-tasks respecting dependency order.&quot;&quot;&quot;</span>
+</span><span id="__span-10-226"><a id="__codelineno-10-226" name="__codelineno-10-226" href="#__codelineno-10-226"></a>    <span class="n">shared_state</span>  <span class="o">=</span> <span class="p">{}</span>
+</span><span id="__span-10-227"><a id="__codelineno-10-227" name="__codelineno-10-227" href="#__codelineno-10-227"></a>    <span class="n">pending</span>       <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]:</span> <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">sub_tasks</span><span class="p">}</span>
+</span><span id="__span-10-228"><a id="__codelineno-10-228" name="__codelineno-10-228" href="#__codelineno-10-228"></a>    <span class="n">completed_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+</span><span id="__span-10-229"><a id="__codelineno-10-229" name="__codelineno-10-229" href="#__codelineno-10-229"></a>
+</span><span id="__span-10-230"><a id="__codelineno-10-230" name="__codelineno-10-230" href="#__codelineno-10-230"></a>    <span class="k">while</span> <span class="n">pending</span><span class="p">:</span>
+</span><span id="__span-10-231"><a id="__codelineno-10-231" name="__codelineno-10-231" href="#__codelineno-10-231"></a>        <span class="n">ready</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-10-232"><a id="__codelineno-10-232" name="__codelineno-10-232" href="#__codelineno-10-232"></a>            <span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">pending</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+</span><span id="__span-10-233"><a id="__codelineno-10-233" name="__codelineno-10-233" href="#__codelineno-10-233"></a>            <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">dep</span> <span class="ow">in</span> <span class="n">completed_ids</span> <span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;depends_on&quot;</span><span class="p">,</span> <span class="p">[]))</span>
+</span><span id="__span-10-234"><a id="__codelineno-10-234" name="__codelineno-10-234" href="#__codelineno-10-234"></a>        <span class="p">]</span>
+</span><span id="__span-10-235"><a id="__codelineno-10-235" name="__codelineno-10-235" href="#__codelineno-10-235"></a>
+</span><span id="__span-10-236"><a id="__codelineno-10-236" name="__codelineno-10-236" href="#__codelineno-10-236"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">ready</span><span class="p">:</span>
+</span><span id="__span-10-237"><a id="__codelineno-10-237" name="__codelineno-10-237" href="#__codelineno-10-237"></a>            <span class="k">for</span> <span class="n">fid</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">pending</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+</span><span id="__span-10-238"><a id="__codelineno-10-238" name="__codelineno-10-238" href="#__codelineno-10-238"></a>                <span class="n">shared_state</span><span class="p">[</span><span class="n">fid</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-10-239"><a id="__codelineno-10-239" name="__codelineno-10-239" href="#__codelineno-10-239"></a>                    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">fid</span><span class="p">,</span> <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span>
+</span><span id="__span-10-240"><a id="__codelineno-10-240" name="__codelineno-10-240" href="#__codelineno-10-240"></a>                    <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Unresolvable dependency&quot;</span>
+</span><span id="__span-10-241"><a id="__codelineno-10-241" name="__codelineno-10-241" href="#__codelineno-10-241"></a>                <span class="p">}</span>
+</span><span id="__span-10-242"><a id="__codelineno-10-242" name="__codelineno-10-242" href="#__codelineno-10-242"></a>            <span class="k">break</span>
+</span><span id="__span-10-243"><a id="__codelineno-10-243" name="__codelineno-10-243" href="#__codelineno-10-243"></a>
+</span><span id="__span-10-244"><a id="__codelineno-10-244" name="__codelineno-10-244" href="#__codelineno-10-244"></a>        <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="n">ready</span><span class="p">:</span>
+</span><span id="__span-10-245"><a id="__codelineno-10-245" name="__codelineno-10-245" href="#__codelineno-10-245"></a>            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+</span><span id="__span-10-246"><a id="__codelineno-10-246" name="__codelineno-10-246" href="#__codelineno-10-246"></a>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  [Sub-task </span><span class="si">{</span><span class="n">task</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> — </span><span class="si">{</span><span class="n">task</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+</span><span id="__span-10-247"><a id="__codelineno-10-247" name="__codelineno-10-247" href="#__codelineno-10-247"></a>
+</span><span id="__span-10-248"><a id="__codelineno-10-248" name="__codelineno-10-248" href="#__codelineno-10-248"></a>            <span class="n">context</span> <span class="o">=</span> <span class="n">build_context</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">shared_state</span><span class="p">)</span>
+</span><span id="__span-10-249"><a id="__codelineno-10-249" name="__codelineno-10-249" href="#__codelineno-10-249"></a>            <span class="n">result</span>  <span class="o">=</span> <span class="n">run_worker</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+</span><span id="__span-10-250"><a id="__codelineno-10-250" name="__codelineno-10-250" href="#__codelineno-10-250"></a>            <span class="n">shared_state</span><span class="p">[</span><span class="n">task</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">result</span>
+</span><span id="__span-10-251"><a id="__codelineno-10-251" name="__codelineno-10-251" href="#__codelineno-10-251"></a>            <span class="n">completed_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">task</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
+</span><span id="__span-10-252"><a id="__codelineno-10-252" name="__codelineno-10-252" href="#__codelineno-10-252"></a>            <span class="k">del</span> <span class="n">pending</span><span class="p">[</span><span class="n">task</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span>
+</span><span id="__span-10-253"><a id="__codelineno-10-253" name="__codelineno-10-253" href="#__codelineno-10-253"></a>
+</span><span id="__span-10-254"><a id="__codelineno-10-254" name="__codelineno-10-254" href="#__codelineno-10-254"></a>    <span class="k">return</span> <span class="n">shared_state</span>
+</span><span id="__span-10-255"><a id="__codelineno-10-255" name="__codelineno-10-255" href="#__codelineno-10-255"></a>
+</span><span id="__span-10-256"><a id="__codelineno-10-256" name="__codelineno-10-256" href="#__codelineno-10-256"></a>
+</span><span id="__span-10-257"><a id="__codelineno-10-257" name="__codelineno-10-257" href="#__codelineno-10-257"></a><span class="c1"># -------------------------------------------------------------------</span>
+</span><span id="__span-10-258"><a id="__codelineno-10-258" name="__codelineno-10-258" href="#__codelineno-10-258"></a><span class="c1"># MAIN PIPELINE</span>
+</span><span id="__span-10-259"><a id="__codelineno-10-259" name="__codelineno-10-259" href="#__codelineno-10-259"></a><span class="c1"># -------------------------------------------------------------------</span>
+</span><span id="__span-10-260"><a id="__codelineno-10-260" name="__codelineno-10-260" href="#__codelineno-10-260"></a>
+</span><span id="__span-10-261"><a id="__codelineno-10-261" name="__codelineno-10-261" href="#__codelineno-10-261"></a><span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">user_request</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-10-262"><a id="__codelineno-10-262" name="__codelineno-10-262" href="#__codelineno-10-262"></a>    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+</span><span id="__span-10-263"><a id="__codelineno-10-263" name="__codelineno-10-263" href="#__codelineno-10-263"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+</span><span id="__span-10-264"><a id="__codelineno-10-264" name="__codelineno-10-264" href="#__codelineno-10-264"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  STEP 1 — Decompose&quot;</span><span class="p">)</span>
+</span><span id="__span-10-265"><a id="__codelineno-10-265" name="__codelineno-10-265" href="#__codelineno-10-265"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+</span><span id="__span-10-266"><a id="__codelineno-10-266" name="__codelineno-10-266" href="#__codelineno-10-266"></a>
+</span><span id="__span-10-267"><a id="__codelineno-10-267" name="__codelineno-10-267" href="#__codelineno-10-267"></a>    <span class="n">sub_tasks</span> <span class="o">=</span> <span class="n">decompose_task</span><span class="p">(</span><span class="n">user_request</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+</span><span id="__span-10-268"><a id="__codelineno-10-268" name="__codelineno-10-268" href="#__codelineno-10-268"></a>
+</span><span id="__span-10-269"><a id="__codelineno-10-269" name="__codelineno-10-269" href="#__codelineno-10-269"></a>    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+</span><span id="__span-10-270"><a id="__codelineno-10-270" name="__codelineno-10-270" href="#__codelineno-10-270"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">sub_tasks</span><span class="p">)</span><span class="si">}</span><span class="s2"> sub-tasks:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-10-271"><a id="__codelineno-10-271" name="__codelineno-10-271" href="#__codelineno-10-271"></a>        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">sub_tasks</span><span class="p">:</span>
+</span><span id="__span-10-272"><a id="__codelineno-10-272" name="__codelineno-10-272" href="#__codelineno-10-272"></a>            <span class="n">deps</span>    <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;depends_on&quot;</span><span class="p">,</span> <span class="p">[])</span>
+</span><span id="__span-10-273"><a id="__codelineno-10-273" name="__codelineno-10-273" href="#__codelineno-10-273"></a>            <span class="n">dep_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot; [after: </span><span class="si">{</span><span class="n">deps</span><span class="si">}</span><span class="s2">]&quot;</span> <span class="k">if</span> <span class="n">deps</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+</span><span id="__span-10-274"><a id="__codelineno-10-274" name="__codelineno-10-274" href="#__codelineno-10-274"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">. [</span><span class="si">{</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">]</span><span class="si">{</span><span class="n">dep_str</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][:</span><span class="mi">70</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+</span><span id="__span-10-275"><a id="__codelineno-10-275" name="__codelineno-10-275" href="#__codelineno-10-275"></a>
+</span><span id="__span-10-276"><a id="__codelineno-10-276" name="__codelineno-10-276" href="#__codelineno-10-276"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+</span><span id="__span-10-277"><a id="__codelineno-10-277" name="__codelineno-10-277" href="#__codelineno-10-277"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  STEP 2 — Execute workers&quot;</span><span class="p">)</span>
+</span><span id="__span-10-278"><a id="__codelineno-10-278" name="__codelineno-10-278" href="#__codelineno-10-278"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+</span><span id="__span-10-279"><a id="__codelineno-10-279" name="__codelineno-10-279" href="#__codelineno-10-279"></a>
+</span><span id="__span-10-280"><a id="__codelineno-10-280" name="__codelineno-10-280" href="#__codelineno-10-280"></a>    <span class="n">shared_state</span> <span class="o">=</span> <span class="n">execute_plan</span><span class="p">(</span><span class="n">sub_tasks</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+</span><span id="__span-10-281"><a id="__codelineno-10-281" name="__codelineno-10-281" href="#__codelineno-10-281"></a>
+</span><span id="__span-10-282"><a id="__codelineno-10-282" name="__codelineno-10-282" href="#__codelineno-10-282"></a>    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+</span><span id="__span-10-283"><a id="__codelineno-10-283" name="__codelineno-10-283" href="#__codelineno-10-283"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+</span><span id="__span-10-284"><a id="__codelineno-10-284" name="__codelineno-10-284" href="#__codelineno-10-284"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  STEP 3 — Synthesise&quot;</span><span class="p">)</span>
+</span><span id="__span-10-285"><a id="__codelineno-10-285" name="__codelineno-10-285" href="#__codelineno-10-285"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-10-286"><a id="__codelineno-10-286" name="__codelineno-10-286" href="#__codelineno-10-286"></a>
+</span><span id="__span-10-287"><a id="__codelineno-10-287" name="__codelineno-10-287" href="#__codelineno-10-287"></a>    <span class="n">final</span> <span class="o">=</span> <span class="n">synthesise</span><span class="p">(</span><span class="n">user_request</span><span class="p">,</span> <span class="n">shared_state</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+</span><span id="__span-10-288"><a id="__codelineno-10-288" name="__codelineno-10-288" href="#__codelineno-10-288"></a>
+</span><span id="__span-10-289"><a id="__codelineno-10-289" name="__codelineno-10-289" href="#__codelineno-10-289"></a>    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+</span><span id="__span-10-290"><a id="__codelineno-10-290" name="__codelineno-10-290" href="#__codelineno-10-290"></a>        <span class="nb">print</span><span class="p">(</span><span class="n">final</span><span class="p">)</span>
+</span><span id="__span-10-291"><a id="__codelineno-10-291" name="__codelineno-10-291" href="#__codelineno-10-291"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+</span><span id="__span-10-292"><a id="__codelineno-10-292" name="__codelineno-10-292" href="#__codelineno-10-292"></a>
+</span><span id="__span-10-293"><a id="__codelineno-10-293" name="__codelineno-10-293" href="#__codelineno-10-293"></a>        <span class="n">total_tokens</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
+</span><span id="__span-10-294"><a id="__codelineno-10-294" name="__codelineno-10-294" href="#__codelineno-10-294"></a>            <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tokens&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">shared_state</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;success&quot;</span>
+</span><span id="__span-10-295"><a id="__codelineno-10-295" name="__codelineno-10-295" href="#__codelineno-10-295"></a>        <span class="p">)</span>
+</span><span id="__span-10-296"><a id="__codelineno-10-296" name="__codelineno-10-296" href="#__codelineno-10-296"></a>        <span class="n">successful</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">shared_state</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;success&quot;</span><span class="p">)</span>
+</span><span id="__span-10-297"><a id="__codelineno-10-297" name="__codelineno-10-297" href="#__codelineno-10-297"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  Sub-tasks completed : </span><span class="si">{</span><span class="n">successful</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">sub_tasks</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-10-298"><a id="__codelineno-10-298" name="__codelineno-10-298" href="#__codelineno-10-298"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Total worker tokens : </span><span class="si">{</span><span class="n">total_tokens</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-10-299"><a id="__codelineno-10-299" name="__codelineno-10-299" href="#__codelineno-10-299"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  All inference       : local (no API cost)&quot;</span><span class="p">)</span>
+</span><span id="__span-10-300"><a id="__codelineno-10-300" name="__codelineno-10-300" href="#__codelineno-10-300"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-10-301"><a id="__codelineno-10-301" name="__codelineno-10-301" href="#__codelineno-10-301"></a>
+</span><span id="__span-10-302"><a id="__codelineno-10-302" name="__codelineno-10-302" href="#__codelineno-10-302"></a>    <span class="k">return</span> <span class="n">final</span>
+</span><span id="__span-10-303"><a id="__codelineno-10-303" name="__codelineno-10-303" href="#__codelineno-10-303"></a>
+</span><span id="__span-10-304"><a id="__codelineno-10-304" name="__codelineno-10-304" href="#__codelineno-10-304"></a>
+</span><span id="__span-10-305"><a id="__codelineno-10-305" name="__codelineno-10-305" href="#__codelineno-10-305"></a><span class="c1"># -------------------------------------------------------------------</span>
+</span><span id="__span-10-306"><a id="__codelineno-10-306" name="__codelineno-10-306" href="#__codelineno-10-306"></a><span class="c1"># DEMO</span>
+</span><span id="__span-10-307"><a id="__codelineno-10-307" name="__codelineno-10-307" href="#__codelineno-10-307"></a><span class="c1"># -------------------------------------------------------------------</span>
+</span><span id="__span-10-308"><a id="__codelineno-10-308" name="__codelineno-10-308" href="#__codelineno-10-308"></a>
+</span><span id="__span-10-309"><a id="__codelineno-10-309" name="__codelineno-10-309" href="#__codelineno-10-309"></a><span class="n">DEMO_REQUEST</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-10-310"><a id="__codelineno-10-310" name="__codelineno-10-310" href="#__codelineno-10-310"></a>    <span class="s2">&quot;I&#39;m learning about transformer models. Can you: &quot;</span>
+</span><span id="__span-10-311"><a id="__codelineno-10-311" name="__codelineno-10-311" href="#__codelineno-10-311"></a>    <span class="s2">&quot;1) Explain what the attention mechanism is in simple terms, &quot;</span>
+</span><span id="__span-10-312"><a id="__codelineno-10-312" name="__codelineno-10-312" href="#__codelineno-10-312"></a>    <span class="s2">&quot;2) Compare self-attention vs cross-attention, &quot;</span>
+</span><span id="__span-10-313"><a id="__codelineno-10-313" name="__codelineno-10-313" href="#__codelineno-10-313"></a>    <span class="s2">&quot;3) Give me a Python code snippet showing a minimal dot-product attention calculation, &quot;</span>
+</span><span id="__span-10-314"><a id="__codelineno-10-314" name="__codelineno-10-314" href="#__codelineno-10-314"></a>    <span class="s2">&quot;and 4) Summarise when I would use an encoder-only vs decoder-only vs encoder-decoder architecture.&quot;</span>
+</span><span id="__span-10-315"><a id="__codelineno-10-315" name="__codelineno-10-315" href="#__codelineno-10-315"></a><span class="p">)</span>
+</span><span id="__span-10-316"><a id="__codelineno-10-316" name="__codelineno-10-316" href="#__codelineno-10-316"></a>
+</span><span id="__span-10-317"><a id="__codelineno-10-317" name="__codelineno-10-317" href="#__codelineno-10-317"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="__span-10-318"><a id="__codelineno-10-318" name="__codelineno-10-318" href="#__codelineno-10-318"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Orchestrated Multi-Agent System — Phase 5&quot;</span><span class="p">)</span>
+</span><span id="__span-10-319"><a id="__codelineno-10-319" name="__codelineno-10-319" href="#__codelineno-10-319"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Orchestrator : </span><span class="si">{</span><span class="n">ORCHESTRATOR_MODEL</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-10-320"><a id="__codelineno-10-320" name="__codelineno-10-320" href="#__codelineno-10-320"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Workers      : E2B (factual/summarise) | 26B (reasoning/code)&quot;</span><span class="p">)</span>
+</span><span id="__span-10-321"><a id="__codelineno-10-321" name="__codelineno-10-321" href="#__codelineno-10-321"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Request: </span><span class="si">{</span><span class="n">DEMO_REQUEST</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+</span><span id="__span-10-322"><a id="__codelineno-10-322" name="__codelineno-10-322" href="#__codelineno-10-322"></a>
+</span><span id="__span-10-323"><a id="__codelineno-10-323" name="__codelineno-10-323" href="#__codelineno-10-323"></a>    <span class="n">run</span><span class="p">(</span><span class="n">DEMO_REQUEST</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="next">Next</h2>
+<p><strong>Gemma as a Worker</strong> — what kinds of sub-tasks Gemma handles well in a worker role, how to structure the worker interface, and how results flow back to the orchestrator.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.expand", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

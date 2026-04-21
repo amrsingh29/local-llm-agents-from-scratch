@@ -1,0 +1,3185 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentation for building local AI agents from scratch using Gemma.">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../01-installation/01-how-llms-are-packaged/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Gemma Local AI — Learning Curriculum - Gemma Local AI</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#gemma-local-ai-learning-curriculum" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Gemma Local AI" class="md-header__button md-logo" aria-label="Gemma Local AI" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Gemma Local AI
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Gemma Local AI — Learning Curriculum
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Gemma Local AI" class="md-nav__button md-logo" aria-label="Gemma Local AI" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Gemma Local AI
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Local LLM Agents From Scratch
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gemma Local AI — Learning Curriculum
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gemma Local AI — Learning Curriculum
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hardware-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-core-insight-this-journey-teaches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Core Insight This Journey Teaches
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-1-installation-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1 — Installation &amp; Infrastructure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 1 — Installation &amp; Infrastructure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-youll-learn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Learn
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-naive-question-to-start-with" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Naive Question to Start With
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experiments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-2-llm-fundamentals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — LLM Fundamentals
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 2 — LLM Fundamentals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-youll-learn_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Learn
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-naive-approach-that-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Naive Approach That Fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experiments_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-files_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-connection_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-3-agent-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3 — Agent Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 3 — Agent Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-youll-learn_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Learn
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-naive-approach-that-fails_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Naive Approach That Fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experiments_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-files_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-connection_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-4-edge-ai-on-device-intelligence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — Edge AI &amp; On-Device Intelligence
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 4 — Edge AI &amp; On-Device Intelligence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-youll-learn_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Learn
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-naive-question-that-exposes-gaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Naive Question That Exposes Gaps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experiments_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-files_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-connection_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-5-orchestration-multi-agent-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5 — Orchestration &amp; Multi-Agent Systems
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 5 — Orchestration &amp; Multi-Agent Systems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-youll-learn_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Learn
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-naive-approach-that-fails_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Naive Approach That Fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experiments_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-files_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-connection_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-6-evaluation-benchmarking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 6 — Evaluation &amp; Benchmarking
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 6 — Evaluation &amp; Benchmarking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-youll-learn_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Learn
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-naive-approach-that-fails_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Naive Approach That Fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experiments_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-files_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-connection_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-7-production-enterprise-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 7 — Production &amp; Enterprise Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 7 — Production &amp; Enterprise Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-youll-learn_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Learn
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experiments_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-files_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-connection_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-cutting-themes-all-phases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-Cutting Themes (All Phases)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#suggested-weekly-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suggested Weekly Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#publishing-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Publishing Plan
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 installation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    01 installation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-installation/01-how-llms-are-packaged/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How LLMs Are Packaged and Distributed
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-installation/02-quantization-from-first-principles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quantization From First Principles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-installation/03-ollama-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ollama Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-installation/04-gemma-model-variants/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gemma 4 Model Variants
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 llm fundamentals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    02 llm fundamentals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-llm-fundamentals/01-tokens-from-first-principles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tokens From First Principles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-llm-fundamentals/02-context-window-limits-and-tricks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Context Window Limits
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-llm-fundamentals/03-temperature-and-sampling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Temperature and Sampling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-llm-fundamentals/04-statelessness-why-llms-forget/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Statelessness
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-llm-fundamentals/05-prompt-engineering-as-programming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Engineering as Programming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 agent architecture
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    03 agent architecture
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-agent-architecture/01-what-is-an-agent-vs-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent vs Pipeline vs Chatbot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-agent-architecture/02-the-agent-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The Agent Loop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-agent-architecture/03-react-pattern-from-first-principles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The ReAct Pattern
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-agent-architecture/04-tool-calling-internals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tool Calling Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-agent-architecture/05-tool-schema-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tool Schema Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 edge ai
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    04 edge ai
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-edge-ai/01-edge-ai-vs-cloud-ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Edge AI vs Cloud AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-edge-ai/02-gemma-e2b-vs-26b-benchmark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gemma E2B vs 26B Benchmark
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-edge-ai/03-model-routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Model Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 orchestration multi agent
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    05 orchestration multi agent
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-orchestration-multi-agent/01-multi-agent-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Agent Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-orchestration-multi-agent/02-gemma-as-worker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gemma as a Worker Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 evaluation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    06 evaluation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-evaluation/01-why-llm-evaluation-is-hard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why LLM Evaluation Is Hard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-evaluation/02-llm-as-judge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM-as-Judge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-evaluation/03-domain-specific-benchmark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domain-Specific Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-evaluation/04-itsm-evaluation-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ITSM Evaluation Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 production enterprise
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    07 production enterprise
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-production-enterprise/01-self-hosted-ai-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-Hosted AI Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-production-enterprise/02-concurrency-and-throughput/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concurrency and Throughput
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-production-enterprise/03-audit-logging-compliance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audit Logging for AI Compliance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-production-enterprise/04-guardrails-for-local-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails for Local AI Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-production-enterprise/05-air-gapped-deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Air-Gapped AI Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#hardware-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-core-insight-this-journey-teaches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Core Insight This Journey Teaches
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-1-installation-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1 — Installation &amp; Infrastructure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 1 — Installation &amp; Infrastructure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-youll-learn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Learn
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-naive-question-to-start-with" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Naive Question to Start With
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experiments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-2-llm-fundamentals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — LLM Fundamentals
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 2 — LLM Fundamentals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-youll-learn_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Learn
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-naive-approach-that-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Naive Approach That Fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experiments_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-files_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-connection_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-3-agent-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3 — Agent Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 3 — Agent Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-youll-learn_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Learn
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-naive-approach-that-fails_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Naive Approach That Fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experiments_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-files_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-connection_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-4-edge-ai-on-device-intelligence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — Edge AI &amp; On-Device Intelligence
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 4 — Edge AI &amp; On-Device Intelligence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-youll-learn_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Learn
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-naive-question-that-exposes-gaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Naive Question That Exposes Gaps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experiments_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-files_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-connection_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-5-orchestration-multi-agent-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5 — Orchestration &amp; Multi-Agent Systems
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 5 — Orchestration &amp; Multi-Agent Systems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-youll-learn_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Learn
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-naive-approach-that-fails_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Naive Approach That Fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experiments_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-files_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-connection_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-6-evaluation-benchmarking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 6 — Evaluation &amp; Benchmarking
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 6 — Evaluation &amp; Benchmarking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-youll-learn_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Learn
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-naive-approach-that-fails_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Naive Approach That Fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experiments_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-files_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-connection_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-7-production-enterprise-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 7 — Production &amp; Enterprise Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 7 — Production &amp; Enterprise Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-youll-learn_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Learn
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experiments_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Experiments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-files_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enterprise-connection_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enterprise Connection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-cutting-themes-all-phases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-Cutting Themes (All Phases)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#suggested-weekly-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Suggested Weekly Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#publishing-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Publishing Plan
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="gemma-local-ai-learning-curriculum">Gemma Local AI — Learning Curriculum</h1>
+<blockquote>
+<p><strong>Model:</strong> Google Gemma 4 26B (MoE, runs on 24 GB Apple M4)
+<strong>Tool:</strong> Ollama (local inference server)
+<strong>Goal:</strong> Master LLM fundamentals, AI Agents, and Edge AI through hands-on local experimentation
+<strong>Audience:</strong> Amrendra — building toward tutorial publication and enterprise thought leadership
+<strong>Philosophy:</strong> First principles always. Show why naive approaches fail before presenting the right solution.</p>
+</blockquote>
+<hr />
+<h2 id="hardware-context">Hardware Context</h2>
+<table>
+<thead>
+<tr>
+<th>Spec</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chip</td>
+<td>Apple M4</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>24 GB Unified Memory</td>
+</tr>
+<tr>
+<td>GPU</td>
+<td>Metal 4</td>
+</tr>
+<tr>
+<td>Model</td>
+<td>Gemma 4 26B MoE (4B active params at inference)</td>
+</tr>
+<tr>
+<td>Inference</td>
+<td>Ollama via Metal GPU acceleration</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="the-core-insight-this-journey-teaches">The Core Insight This Journey Teaches</h2>
+<blockquote>
+<p>Most enterprise AI projects fail not because models are bad, but because teams don't understand the tradeoffs between <strong>cloud vs local</strong>, <strong>quality vs cost</strong>, and <strong>capability vs privacy</strong>.
+Running a model from scratch — from raw bits to working agent — gives you visceral, first-principles understanding of all three.</p>
+</blockquote>
+<hr />
+<h2 id="phase-1-installation-infrastructure">Phase 1 — Installation &amp; Infrastructure</h2>
+<blockquote>
+<p>Duration: ~1 day | Status: [ ] Not Started</p>
+</blockquote>
+<h3 id="what-youll-learn">What You'll Learn</h3>
+<ul>
+<li>How LLMs are packaged and distributed (GGUF, safetensors formats)</li>
+<li>What quantization is: why Q4 is not the same model as Q8, and when that matters</li>
+<li>How Ollama wraps a model and exposes it as a local REST API</li>
+<li>How Apple's unified memory architecture differs from traditional GPU VRAM</li>
+<li>How Metal GPU acceleration works for inference on Apple Silicon</li>
+</ul>
+<h3 id="the-naive-question-to-start-with">The Naive Question to Start With</h3>
+<p>"Can't I just download a model and run it?" — yes, but understanding <em>what</em> you're downloading and <em>how</em> it runs changes how you architect every system afterward.</p>
+<h3 id="experiments">Experiments</h3>
+<ol>
+<li>Install Ollama, pull Gemma 4 26B, run first inference</li>
+<li>Check memory usage during inference (<code>Activity Monitor</code> / <code>powermetrics</code>)</li>
+<li>Run same prompt 3 times with different temperature settings — observe variance</li>
+<li>Time a 100-token response vs 1000-token response — understand throughput</li>
+</ol>
+<h3 id="key-files">Key Files</h3>
+<ul>
+<li><code>notes/01-how-llms-are-packaged.md</code></li>
+<li><code>notes/02-quantization-from-first-principles.md</code></li>
+<li><code>notes/03-ollama-architecture.md</code></li>
+<li><code>code/01_first_inference.py</code></li>
+<li><code>code/02_benchmark_throughput.py</code></li>
+</ul>
+<h3 id="enterprise-connection">Enterprise Connection</h3>
+<p>On-premise AI deployment starts here. Every enterprise that says "we can't send data to the cloud" needs someone who understands exactly this layer.</p>
+<hr />
+<h2 id="phase-2-llm-fundamentals">Phase 2 — LLM Fundamentals</h2>
+<blockquote>
+<p>Duration: ~3 days | Status: [ ] Not Started</p>
+</blockquote>
+<h3 id="what-youll-learn_1">What You'll Learn</h3>
+<ul>
+<li>Tokens: what they are, how text is split, why "4 chars per token" is a lie</li>
+<li>Context windows: why 256K tokens ≠ infinite memory</li>
+<li>Temperature, top-p, top-k: the knobs that control output randomness</li>
+<li>The stateless nature of LLMs: why every call is a fresh start</li>
+<li>System prompts: how they shape model behavior</li>
+<li>Few-shot prompting: teaching via examples in-context</li>
+<li>Chain-of-thought: why "think step by step" actually works</li>
+</ul>
+<h3 id="the-naive-approach-that-fails">The Naive Approach That Fails</h3>
+<p>Treating an LLM like a database: "store a fact, retrieve it later." Show why this breaks without understanding statelessness.</p>
+<h3 id="experiments_1">Experiments</h3>
+<ol>
+<li>Tokenize the same sentence 5 ways — watch token counts change</li>
+<li>Fill context window to 90% — observe degraded recall (the "lost in the middle" problem)</li>
+<li>Run identical prompt at temp=0, temp=0.5, temp=1.5 — build intuition</li>
+<li>Send a 10-message conversation without history vs with history — prove statelessness</li>
+<li>System prompt A vs System prompt B on the same question — measure behavioral shift</li>
+</ol>
+<h3 id="key-files_1">Key Files</h3>
+<ul>
+<li><code>notes/01-tokens-from-first-principles.md</code></li>
+<li><code>notes/02-context-window-limits-and-tricks.md</code></li>
+<li><code>notes/03-temperature-and-sampling.md</code></li>
+<li><code>notes/04-statelessness-why-llms-forget.md</code></li>
+<li><code>notes/05-prompt-engineering-as-programming.md</code></li>
+<li><code>code/01_tokenization_experiments.py</code></li>
+<li><code>code/02_context_window_limits.py</code></li>
+<li><code>code/03_temperature_experiments.py</code></li>
+<li><code>code/04_stateless_proof.py</code></li>
+</ul>
+<h3 id="enterprise-connection_1">Enterprise Connection</h3>
+<p>Every failed LLM deployment traces back to someone not understanding one of these fundamentals. This is the knowledge that separates engineers from power users.</p>
+<hr />
+<h2 id="phase-3-agent-architecture">Phase 3 — Agent Architecture</h2>
+<blockquote>
+<p>Duration: ~4 days | Status: [ ] Not Started</p>
+</blockquote>
+<h3 id="what-youll-learn_2">What You'll Learn</h3>
+<ul>
+<li>What makes something an "agent" vs a chatbot vs a pipeline</li>
+<li>The agent loop: Perceive → Think → Act → Observe (repeat)</li>
+<li>ReAct pattern: the bedrock of modern agents (Reasoning + Acting interleaved)</li>
+<li>Tool/function calling: how the model signals "I need to use a tool"</li>
+<li>Tool schema design: why a poorly designed tool schema breaks agents</li>
+<li>Error handling in tool use: what happens when tools fail</li>
+</ul>
+<h3 id="the-naive-approach-that-fails_1">The Naive Approach That Fails</h3>
+<p>Chaining prompts sequentially (a "pipeline") and calling it an agent. Show why it breaks on anything non-linear.</p>
+<h3 id="experiments_2">Experiments</h3>
+<ol>
+<li>Build a bare-metal ReAct agent calling Gemma locally — no LangChain, no frameworks</li>
+<li>Wire up 3 real tools: web search, calculator, file reader</li>
+<li>Deliberately break a tool — watch how the agent handles failure</li>
+<li>Compare pipeline (fixed steps) vs agent (dynamic steps) on the same task</li>
+</ol>
+<h3 id="key-files_2">Key Files</h3>
+<ul>
+<li><code>notes/01-what-is-an-agent-vs-pipeline.md</code></li>
+<li><code>notes/02-the-agent-loop.md</code></li>
+<li><code>notes/03-react-pattern-from-first-principles.md</code></li>
+<li><code>notes/04-tool-calling-internals.md</code></li>
+<li><code>notes/05-tool-schema-design.md</code></li>
+<li><code>code/01_bare_metal_react_agent.py</code></li>
+<li><code>code/02_tool_calling_deep_dive.py</code></li>
+<li><code>code/03_agent_error_handling.py</code></li>
+</ul>
+<h3 id="enterprise-connection_2">Enterprise Connection</h3>
+<p>The ReAct pattern is how every production agent works today — Copilot, Claude, Gemini agents. Understanding it from scratch means you can debug, extend, and audit any agent system.</p>
+<hr />
+<h2 id="phase-4-edge-ai-on-device-intelligence">Phase 4 — Edge AI &amp; On-Device Intelligence</h2>
+<blockquote>
+<p>Duration: ~3 days | Status: [ ] Not Started</p>
+</blockquote>
+<h3 id="what-youll-learn_3">What You'll Learn</h3>
+<ul>
+<li>What "Edge AI" means: inference at the source, not in the cloud</li>
+<li>The spectrum: cloud → on-premise server → edge device → mobile → microcontroller</li>
+<li>Privacy-first AI: how local inference eliminates data exfiltration risk</li>
+<li>Quantization deep dive: INT4, INT8, FP16, FP32 — quality vs speed tradeoffs</li>
+<li>Hardware-aware inference: Neural Engine, GPU, CPU — which runs what and why</li>
+<li>Latency vs throughput: optimizing for real-time response vs batch processing</li>
+<li>When local beats cloud: the decision framework</li>
+</ul>
+<h3 id="the-naive-question-that-exposes-gaps">The Naive Question That Exposes Gaps</h3>
+<p>"Why not just use ChatGPT?" — show the 5 enterprise scenarios where that answer is wrong.</p>
+<h3 id="experiments_3">Experiments</h3>
+<ol>
+<li>Benchmark Gemma 26B local vs Claude API: latency, throughput, quality on same tasks</li>
+<li>Run Q4 vs Q8 quantization — measure quality degradation on reasoning tasks</li>
+<li>Profile inference: which chip (CPU/GPU/Neural Engine) handles which operations</li>
+<li>Build latency dashboard: tokens/second under load</li>
+<li>Simulate air-gapped environment: no internet, full agent still runs</li>
+</ol>
+<h3 id="key-files_3">Key Files</h3>
+<ul>
+<li><code>notes/01-what-is-edge-ai.md</code></li>
+<li><code>notes/02-the-cloud-vs-local-decision-framework.md</code></li>
+<li><code>notes/03-quantization-quality-tradeoffs.md</code></li>
+<li><code>notes/04-hardware-aware-inference-apple-silicon.md</code></li>
+<li><code>notes/05-privacy-first-ai-enterprise-patterns.md</code></li>
+<li><code>code/01_latency_benchmark.py</code></li>
+<li><code>code/02_quantization_comparison.py</code></li>
+<li><code>code/03_throughput_under_load.py</code></li>
+</ul>
+<h3 id="enterprise-connection_3">Enterprise Connection</h3>
+<p>Regulated industries — banking, defense, healthcare, legal — cannot send data to cloud APIs. This phase makes you the person who can architect the alternative.</p>
+<hr />
+<h2 id="phase-5-orchestration-multi-agent-systems">Phase 5 — Orchestration &amp; Multi-Agent Systems</h2>
+<blockquote>
+<p>Duration: ~4 days | Status: [ ] Not Started</p>
+</blockquote>
+<h3 id="what-youll-learn_4">What You'll Learn</h3>
+<ul>
+<li>Why single agents fail at complex, long-horizon tasks</li>
+<li>Orchestrator + worker agent pattern</li>
+<li>Using Gemma as a worker, Claude as orchestrator — heterogeneous multi-agent systems</li>
+<li>Model routing: right model for the right task (cost vs quality)</li>
+<li>Shared vs isolated memory across agents</li>
+<li>Human-in-the-loop design: when to pause and ask</li>
+</ul>
+<h3 id="the-naive-approach-that-fails_2">The Naive Approach That Fails</h3>
+<p>One giant agent trying to do everything. Show how context blows up and reasoning degrades.</p>
+<h3 id="experiments_4">Experiments</h3>
+<ol>
+<li>Build orchestrator (Claude) + worker (Gemma) — assign tasks by complexity</li>
+<li>Implement model routing: if task is simple → Gemma, if complex → Claude</li>
+<li>Shared memory experiment: multiple agents reading/writing a shared context store</li>
+<li>Measure cost: all-Claude vs routed (Gemma for 80% of calls) — compute savings</li>
+</ol>
+<h3 id="key-files_4">Key Files</h3>
+<ul>
+<li><code>notes/01-why-single-agents-fail.md</code></li>
+<li><code>notes/02-orchestrator-worker-pattern.md</code></li>
+<li><code>notes/03-model-routing-cost-quality-tradeoff.md</code></li>
+<li><code>notes/04-heterogeneous-multi-agent-systems.md</code></li>
+<li><code>code/01_orchestrator_worker.py</code></li>
+<li><code>code/02_model_router.py</code></li>
+<li><code>code/03_shared_memory_agents.py</code></li>
+</ul>
+<h3 id="enterprise-connection_4">Enterprise Connection</h3>
+<p>Cost optimization is the #1 enterprise ask after initial LLM deployment. This phase directly answers "how do we cut our AI API bill by 70% without sacrificing quality?"</p>
+<hr />
+<h2 id="phase-6-evaluation-benchmarking">Phase 6 — Evaluation &amp; Benchmarking</h2>
+<blockquote>
+<p>Duration: ~3 days | Status: [ ] Not Started</p>
+</blockquote>
+<h3 id="what-youll-learn_5">What You'll Learn</h3>
+<ul>
+<li>Why LLM evaluation is fundamentally hard (non-determinism, subjectivity)</li>
+<li>LLM-as-judge pattern: using Gemma to evaluate other models (free evaluation!)</li>
+<li>Building your own benchmark: domain-specific, not generic</li>
+<li>Quality vs cost matrix: when is "good enough" actually good enough?</li>
+<li>Comparing Gemma 26B vs Claude on your specific use cases</li>
+<li>Automated regression testing for agents</li>
+</ul>
+<h3 id="the-naive-approach-that-fails_3">The Naive Approach That Fails</h3>
+<p>Using MMLU/benchmark scores as a proxy for your actual use case. Show why a model that scores 90% on MMLU can fail your domain tasks.</p>
+<h3 id="experiments_5">Experiments</h3>
+<ol>
+<li>Build a 50-question benchmark for a specific domain (e.g., IT change management)</li>
+<li>Run Gemma 26B and Claude on same benchmark — score with LLM-as-judge</li>
+<li>Build automated eval harness: push code → run benchmark → get quality report</li>
+<li>Cost analysis: if Gemma scores 85% and Claude scores 92%, what is the 7% worth?</li>
+</ol>
+<h3 id="key-files_5">Key Files</h3>
+<ul>
+<li><code>notes/01-why-llm-evaluation-is-hard.md</code></li>
+<li><code>notes/02-llm-as-judge-pattern.md</code></li>
+<li><code>notes/03-building-domain-specific-benchmarks.md</code></li>
+<li><code>notes/04-quality-vs-cost-decision-matrix.md</code></li>
+<li><code>code/01_llm_judge.py</code></li>
+<li><code>code/02_benchmark_harness.py</code></li>
+<li><code>code/03_cost_quality_analysis.py</code></li>
+</ul>
+<h3 id="enterprise-connection_5">Enterprise Connection</h3>
+<p>Every enterprise AI investment needs an ROI story. This phase gives you the framework to measure and communicate value — critical for your presales role.</p>
+<hr />
+<h2 id="phase-7-production-enterprise-patterns">Phase 7 — Production &amp; Enterprise Patterns</h2>
+<blockquote>
+<p>Duration: ~4 days | Status: [ ] Not Started</p>
+</blockquote>
+<h3 id="what-youll-learn_6">What You'll Learn</h3>
+<ul>
+<li>Self-hosted AI architecture: what it takes to run your own model in an enterprise</li>
+<li>Air-gapped deployments: no internet, fully local, fully auditable</li>
+<li>Throughput and concurrency: multiple simultaneous users on one model</li>
+<li>Guardrails and content safety for local models</li>
+<li>Audit logging: every inference logged, traceable, compliant</li>
+<li>Multi-tenancy: one model, many isolated customers</li>
+<li>Security: prompt injection, data leakage prevention, RBAC</li>
+</ul>
+<h3 id="experiments_6">Experiments</h3>
+<ol>
+<li>Run Ollama with 5 concurrent users — measure degradation</li>
+<li>Build a request queue + rate limiter around local Gemma</li>
+<li>Add audit logging: every prompt and response stored with timestamp + user ID</li>
+<li>Implement guardrails: input/output filtering before/after Gemma</li>
+<li>Multi-tenant isolation: user A cannot see user B's conversation history</li>
+</ol>
+<h3 id="key-files_6">Key Files</h3>
+<ul>
+<li><code>notes/01-self-hosted-ai-architecture.md</code></li>
+<li><code>notes/02-air-gapped-deployment-patterns.md</code></li>
+<li><code>notes/03-concurrency-and-throughput.md</code></li>
+<li><code>notes/04-guardrails-for-local-models.md</code></li>
+<li><code>notes/05-audit-logging-compliance.md</code></li>
+<li><code>code/01_concurrent_inference_server.py</code></li>
+<li><code>code/02_audit_logger.py</code></li>
+<li><code>code/03_guardrails.py</code></li>
+<li><code>code/04_multi_tenant_isolation.py</code></li>
+</ul>
+<h3 id="enterprise-connection_6">Enterprise Connection</h3>
+<p>This is the phase that makes you dangerous in a presales conversation. You can speak to every objection: "how do we keep data on-premise?", "how do we audit AI usage?", "how do we scale this?"</p>
+<hr />
+<h2 id="cross-cutting-themes-all-phases">Cross-Cutting Themes (All Phases)</h2>
+<table>
+<thead>
+<tr>
+<th>Theme</th>
+<th>What You'll Build</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cost awareness</td>
+<td>Token/compute cost tracker for every experiment</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>Prompt injection tests in every agent built</td>
+</tr>
+<tr>
+<td>Observability</td>
+<td>Latency + quality metrics logged from day one</td>
+</tr>
+<tr>
+<td>Enterprise narrative</td>
+<td>"How would I sell this?" after every phase</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="suggested-weekly-sequence">Suggested Weekly Sequence</h2>
+<table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Focus</th>
+<th>Milestone</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Phases 1-2: Install + LLM Fundamentals</td>
+<td>Gemma running, 5 experiments done</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Phase 3: Agent Architecture</td>
+<td>Bare-metal ReAct agent with real tools</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Phase 4: Edge AI</td>
+<td>Benchmark report: Gemma vs Claude</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Phase 5: Orchestration</td>
+<td>Heterogeneous multi-agent system running</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Phase 6: Evaluation</td>
+<td>Domain benchmark harness complete</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Phase 7: Production</td>
+<td>Self-hosted AI with audit logs + multi-tenancy</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="publishing-plan">Publishing Plan</h2>
+<p>Each phase produces one tutorial for Amrendra's website:</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Tutorial Title</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1-2</td>
+<td>"Running a 26B AI Model Locally on a MacBook — What I Learned"</td>
+</tr>
+<tr>
+<td>3</td>
+<td>"Building an AI Agent From Scratch Using a Local Model"</td>
+</tr>
+<tr>
+<td>4</td>
+<td>"Edge AI vs Cloud AI: A Practical Decision Framework"</td>
+</tr>
+<tr>
+<td>5</td>
+<td>"Cutting Your AI API Bill by 70% With Model Routing"</td>
+</tr>
+<tr>
+<td>6</td>
+<td>"How to Evaluate LLMs for Your Specific Use Case"</td>
+</tr>
+<tr>
+<td>7</td>
+<td>"Self-Hosted AI for the Enterprise: Architecture, Security, and Compliance"</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="quick-reference">Quick Reference</h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Start Ollama</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ollama<span class="w"> </span>serve
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Pull Gemma 4 (check latest tag at ollama.com/library/gemma4)</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ollama<span class="w"> </span>pull<span class="w"> </span>gemma4:26b
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Run interactive chat</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ollama<span class="w"> </span>run<span class="w"> </span>gemma4:26b
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># API call (Python)</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>import<span class="w"> </span>requests
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nv">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>requests.post<span class="o">(</span><span class="s2">&quot;http://localhost:11434/api/generate&quot;</span>,<span class="w"> </span><span class="nv">json</span><span class="o">={</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="s2">&quot;model&quot;</span>:<span class="w"> </span><span class="s2">&quot;gemma4:26b&quot;</span>,
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="s2">&quot;prompt&quot;</span>:<span class="w"> </span><span class="s2">&quot;Your prompt here&quot;</span>,
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="s2">&quot;stream&quot;</span>:<span class="w"> </span>False
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="o">})</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>print<span class="o">(</span>response.json<span class="o">()[</span><span class="s2">&quot;response&quot;</span><span class="o">])</span>
+</span></code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
