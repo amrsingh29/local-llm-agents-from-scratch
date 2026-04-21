@@ -134,9 +134,21 @@ Router result: 4/4 correct classifications on first run. Classifier overhead ~40
 ---
 
 ### Phase 5 — Orchestration and Multi-Agent Systems
-**Status: Upcoming**
+**Status: Complete**
 
-Gemma as a local worker agent. Claude as a cloud orchestrator. A routing layer that decides which model handles each sub-task.
+Fully local multi-agent system — Gemma 26B orchestrates and synthesises, E2B/26B workers execute sub-tasks routed by task type.
+
+Key findings:
+- 4-part transformer explainer decomposed into 4 correctly typed sub-tasks on first run
+- Routing was automatic: orchestrator assigned `type`, routing table selected the model
+- E2B handled summarise tasks at 51 tok/s; 26B handled reasoning and code
+- 1,949 total worker tokens — zero API cost, everything local
+
+| File | What it covers |
+|------|---------------|
+| `notes/01-multi-agent-architecture.md` | Four single-agent failure modes, orchestrator/worker pattern, task decomposition, dependency graph, experiment results |
+| `notes/02-gemma-as-worker.md` | Worker contract, what Gemma handles well, output format spec, context-passing patterns, per-worker experiment results |
+| `code/01_orchestrated_agent.py` | Full local multi-agent system: decompose → route → execute → synthesise |
 
 ---
 
@@ -171,6 +183,7 @@ ollama pull gemma4:e2b   # 7.2 GB — fast model for routing
 python 01-installation/code/01_first_inference.py
 python 03-agent-architecture/code/01_bare_metal_react_agent.py
 python 04-edge-ai/code/02_model_router.py
+python 05-orchestration-multi-agent/code/01_orchestrated_agent.py
 ```
 
 **Requirements:** Python 3.11+, `requests` library, Ollama 0.20+
@@ -190,7 +203,7 @@ pip install requests
 ├── 02-llm-fundamentals/
 ├── 03-agent-architecture/
 ├── 04-edge-ai/
-├── 05-orchestration-multi-agent/   # Upcoming
+├── 05-orchestration-multi-agent/
 ├── 06-evaluation/                  # Upcoming
 ├── 07-production-enterprise/       # Upcoming
 ├── CURRICULUM.md       # Full 7-phase learning plan with details
