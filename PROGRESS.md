@@ -170,10 +170,35 @@
 
 **Status:** Phase 4 COMPLETE.
 
-**Next:** Phase 5 — Orchestration and Multi-Agent Systems.
-1. Write `notes/01-multi-agent-architecture.md` — orchestrator/worker pattern, task decomposition
-2. Write `notes/02-gemma-as-worker.md` — Gemma handling sub-tasks locally
-3. Build `code/01_orchestrated_agent.py` — Claude orchestrates, Gemma executes tool calls
-4. Build `code/02_task_decomposer.py` — breaks a complex task into routable sub-tasks
+---
+
+## Session 6 — 2026-04-21
+
+**What was done — Phase 5: Orchestration and Multi-Agent Systems**
+
+**Notes written:**
+- `05-orchestration-multi-agent/notes/01-multi-agent-architecture.md` — four single-agent failure modes, orchestrator/worker pattern, task decomposition, dependency graph, routing decision
+- `05-orchestration-multi-agent/notes/02-gemma-as-worker.md` — worker contract, what Gemma handles well, output format spec, three context-passing patterns, error handling
+
+**Code written:**
+- `05-orchestration-multi-agent/code/01_orchestrated_agent.py` — fully local multi-agent system: Gemma 26B orchestrates and synthesises, E2B/26B workers execute sub-tasks by type
+
+**Experiment results (M4 24 GB — fully local):**
+- Request: 4-part transformer model explainer
+- Decomposition: 4 sub-tasks (summarise x2, reasoning x1, code x1) — correct types assigned
+- Sub-task 1 (summarise → E2B): 50.9 tok/s | 570 tokens | attention mechanism explanation
+- Sub-task 2 (reasoning → 26B): 9.4 tok/s | 642 tokens | self-attention vs cross-attention comparison
+- Sub-task 3 (code → 26B): 16.2 tok/s | 287 tokens | scaled dot-product attention in NumPy
+- Sub-task 4 (summarise → E2B): 51.2 tok/s | 450 tokens | encoder/decoder architecture guide
+- Final synthesis: structured multi-section response with table, code block, explanations
+- Total worker tokens: 1,949 | All local — zero API cost
+
+**Key finding:** Gemma 26B decomposed the 4-part request correctly on the first try, assigned correct task types, and the routing matched Phase 4 predictions. E2B handled summarise tasks at 5x the speed of 26B. The synthesised output was well-structured and publication-quality.
+
+**Status:** Phase 5 code and notes complete. Results to be added to notes.
+
+**Next:**
+1. Update notes with experiment results and actual sub-task responses
+2. Commit and push Phase 5 to GitHub
 
 ---
