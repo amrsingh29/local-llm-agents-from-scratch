@@ -175,9 +175,26 @@ Key findings (gemma4:26b, 10-question domain benchmark):
 ---
 
 ### Phase 7 — Production and Enterprise Patterns
-**Status: Upcoming**
+**Status: Complete**
 
-Self-hosted inference with audit logging, rate limiting, guardrails, and multi-tenant isolation.
+Self-hosted inference server with concurrency control, audit logging, and guardrails — the production layer above the model.
+
+Key findings (M4 24 GB, gemma4:26b):
+- Audit logger correctly records two-phase request/response with latency data
+- Guardrail injection detection: 2/2 injection attempts blocked; scope filter caught the third via defence-in-depth
+- Critical bug found: substring keyword matching produces false negatives — `"api" in "capital"` is True; word-boundary regex required for production scope filters
+- All components run fully offline (no external network calls)
+
+| File | What it covers |
+|------|---------------|
+| `notes/01-self-hosted-ai-architecture.md` | 5-layer production architecture, enterprise objections, air-gap checklist |
+| `notes/02-concurrency-and-throughput.md` | Token bucket rate limiter, semaphore queue, thread pool offload, load behaviour |
+| `notes/03-audit-logging-compliance.md` | Two-phase write, per-user reporting, compliance export, real latency data |
+| `notes/04-guardrails-for-local-models.md` | 6 test cases with real results, substring matching bug, defence-in-depth finding |
+| `notes/05-air-gapped-deployment.md` | Pre-staging checklist, telemetry disable, cross-model eval alternatives |
+| `code/01_concurrent_inference_server.py` | FastAPI + semaphore + bounded queue + token bucket rate limiter |
+| `code/02_audit_logger.py` | SQLite audit logger with compliance export |
+| `code/03_guardrails.py` | Input/output filter: injection detection, scope enforcement, PII detection |
 
 ---
 

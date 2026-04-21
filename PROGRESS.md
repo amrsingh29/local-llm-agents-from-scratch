@@ -221,11 +221,47 @@
 
 **Status:** Phase 6 COMPLETE.
 
-**Next:** Phase 7 — Production and Enterprise Patterns
-1. Write `notes/01-self-hosted-ai-architecture.md`
-2. Write `notes/02-concurrency-and-throughput.md`
-3. Write `notes/03-guardrails-and-audit-logging.md`
-4. Build `code/01_concurrent_inference_server.py`
-5. Build `code/02_audit_logger.py`
+---
+
+## Session 8 — 2026-04-21
+
+**What was done — Phase 7: Production and Enterprise Patterns**
+
+**Notes written:**
+- `07-production-enterprise/notes/01-self-hosted-ai-architecture.md` — 5-layer architecture, 5 enterprise objections with answers, design decisions, throughput expectations, air-gap checklist
+- `07-production-enterprise/notes/02-concurrency-and-throughput.md` — token bucket rate limiter, semaphore + bounded queue, thread pool offload, load behaviour table
+- `07-production-enterprise/notes/03-audit-logging-compliance.md` — schema design, two-phase write pattern, experiment results with latency data, compliance export
+- `07-production-enterprise/notes/04-guardrails-for-local-models.md` — 6 test cases run with real results, substring matching bug discovery (false negative on "capital"/"api"), defence-in-depth finding
+- `07-production-enterprise/notes/05-air-gapped-deployment.md` — pre-staging checklist, Ollama telemetry disable, what changes vs connected, cross-model eval alternatives
+
+**Code written:**
+- `07-production-enterprise/code/01_concurrent_inference_server.py` — FastAPI wrapper with semaphore concurrency, bounded queue, token bucket rate limiter, /metrics endpoint, load test mode
+- `07-production-enterprise/code/02_audit_logger.py` — SQLite-backed audit logger with two-phase write, per-user activity report, compliance JSON export
+- `07-production-enterprise/code/03_guardrails.py` — input filter (injection, scope, PII), output filter (refusal, short response, PII), 6-case demo
+
+**Experiment results:**
+
+Audit logger (M4 24 GB, gemma4:26b):
+- Request 1 (root cause question): 19,195ms — cold KV cache
+- Request 2 (index creation question): 12,830ms — warm cache
+- Request 3 (escalation question): 3,249ms — short answer, fast
+- All 3 responses technically correct, logged to /tmp/audit.db
+
+Guardrails (6 test cases):
+- Case 1 — safe triage: OK (13,290ms)
+- Case 2 — safe diagnosis: OK (13,550ms)
+- Case 3 — injection "ignore instructions": BLOCKED (scope filter, not injection regex)
+- Case 4 — injection "act as if": BLOCKED (injection pattern matched correctly)
+- Case 5 — out of scope "capital of France": FALSE NEGATIVE — "capital" contains substring "api", passed scope check
+- Case 6 — PII email in prompt: WARN (email regex matched correctly)
+
+**Key finding:** substring keyword matching is fragile. `"api" in "capital"` is True. Production scope filters need word-boundary regex (`\bapi\b`) or a semantic classifier. Case 3 demonstrates defence-in-depth: injection regex missed but scope filter still blocked.
+
+**Status:** Phase 7 IN PROGRESS — core patterns complete, bonus ITSM quality gate integration pending.
+
+**Next:** 
+1. (Optional) Wire ITSM quality gate from Phase 6 into the inference server
+2. Update README.md with Phase 7 status and findings
+3. Commit and push
 
 ---
