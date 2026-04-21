@@ -195,10 +195,37 @@
 
 **Key finding:** Gemma 26B decomposed the 4-part request correctly on the first try, assigned correct task types, and the routing matched Phase 4 predictions. E2B handled summarise tasks at 5x the speed of 26B. The synthesised output was well-structured and publication-quality.
 
-**Status:** Phase 5 code and notes complete. Results to be added to notes.
+**Status:** Phase 5 COMPLETE.
 
-**Next:**
-1. Update notes with experiment results and actual sub-task responses
-2. Commit and push Phase 5 to GitHub
+---
+
+## Session 7 — 2026-04-21
+
+**What was done — Phase 6: Evaluation and Benchmarking**
+
+**Notes written:**
+- `06-evaluation/notes/01-why-llm-evaluation-is-hard.md` — 5 evaluation failure modes, non-determinism, benchmark gaming, verbosity/position bias, three evaluation approaches
+- `06-evaluation/notes/02-llm-as-judge.md` — judge prompt design (4 components), calibration, known biases, experiment results
+- `06-evaluation/notes/03-domain-specific-benchmark.md` — benchmark design principles, 10-question domain benchmark, experiment results with category breakdown
+
+**Code written:**
+- `06-evaluation/code/01_llm_judge.py` — standalone LLM judge: scores any response 1–5 with reasoning
+- `06-evaluation/code/02_benchmark_harness.py` — full benchmark runner: 10 questions, model + judge calls, category report, quality gate
+
+**Benchmark results (gemma4:26b, M4 24 GB):**
+- Overall: 4.5/5 — quality gate (4.0) PASSED
+- Best category: evaluation (5.0/5) — strong meta-knowledge
+- Weakest category: edge_ai (4.0/5) — missed specific benchmark metrics
+- Common failure mode: token limit truncation (3/4 scoring at 4/5 were truncated, not wrong)
+- Judge calibration: 5, 3, 1 on good/partial/wrong answers — correct discrimination
+
+**Status:** Phase 6 COMPLETE.
+
+**Next:** Phase 7 — Production and Enterprise Patterns
+1. Write `notes/01-self-hosted-ai-architecture.md`
+2. Write `notes/02-concurrency-and-throughput.md`
+3. Write `notes/03-guardrails-and-audit-logging.md`
+4. Build `code/01_concurrent_inference_server.py`
+5. Build `code/02_audit_logger.py`
 
 ---

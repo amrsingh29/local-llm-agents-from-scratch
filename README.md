@@ -153,9 +153,24 @@ Key findings:
 ---
 
 ### Phase 6 — Evaluation and Benchmarking
-**Status: Upcoming**
+**Status: Complete**
 
-Build a domain-specific benchmark harness. Use Gemma as the judge — free evaluations, no external service required.
+Domain-specific benchmark harness using Gemma as the judge — free evaluations, fully local.
+
+Key findings (gemma4:26b, 10-question domain benchmark):
+- Overall: 4.5/5 — quality gate (4.0/5) passed
+- Evaluation category scored 5.0/5 — strong meta-knowledge
+- Common failure: token limit truncation, not factual errors — answers were correct but cut off
+- Judge calibrated correctly: 5/3/1 on good/partial/wrong answers
+- 360 seconds for 10 questions + 10 judge calls — zero API cost
+
+| File | What it covers |
+|------|---------------|
+| `notes/01-why-llm-evaluation-is-hard.md` | Non-determinism, benchmark gaming, verbosity bias, three evaluation approaches |
+| `notes/02-llm-as-judge.md` | Judge prompt design, calibration, known biases, experiment results |
+| `notes/03-domain-specific-benchmark.md` | Benchmark design principles, 10-question domain test, full results |
+| `code/01_llm_judge.py` | Standalone judge: scores any response 1–5 with reasoning |
+| `code/02_benchmark_harness.py` | Full benchmark runner with category report and quality gate |
 
 ---
 
