@@ -108,28 +108,86 @@ has a 4-6 hour procurement lead time? Answer in two sentences.
 ```
 Audit Logger Demo
 Database   : /tmp/audit.db
-Session ID : 4a617c9c
+Session ID : fb7a1b3b
+Requests   : 3
 ```
 
-### Audit Trail
+### Request 1 — engineer_alice: root cause question
 
-| Field | Request 1 | Request 2 | Request 3 |
-|-------|-----------|-----------|-----------|
+**Prompt:**
+```
+The payments API is returning HTTP 503 since 14:23 UTC. GET requests work.
+Database health checks pass. 3,200 transactions per minute are failing.
+What is the most likely root cause in one sentence?
+```
+
+**Response (full):**
+```
+The most likely root cause is a resource exhaustion or configuration issue
+(such as a connection pool limit or thread starvation) specifically affecting
+POST/write operations, preventing the API from processing state-changing
+transactions despite being able to read data.
+```
+
+**Logged:** latency 21,986ms | status: success | prompt_chars: 201 | resp_chars: 291
+
+---
+
+### Request 2 — engineer_alice: resolution question
+
+**Prompt:**
+```
+The fix requires creating a PostgreSQL index on a 47-million-row table
+with 200 writes per second. What SQL command should I use and why?
+```
+
+**Response (full):**
+```sql
+CREATE INDEX CONCURRENTLY idx_your_column_name
+ON your_table_name (your_column_name);
+```
+
+Gemma correctly identified that `CREATE INDEX CONCURRENTLY` is mandatory:
+
+- **Standard `CREATE INDEX`** acquires a SHARE lock — blocks all writes at 200/sec, causing immediate connection pool saturation and a full outage.
+- **`CREATE INDEX CONCURRENTLY`** acquires a SHARE UPDATE EXCLUSIVE lock — reads and writes continue uninterrupted. Requires two table scans instead of one, taking longer but with zero write downtime.
+
+**Logged:** latency 14,783ms | status: success | prompt_chars: 134 | resp_chars: 892
+
+---
+
+### Request 3 — engineer_bob: escalation question
+
+**Prompt:**
+```
+Should I escalate a P2 storage incident where the RAID-6 replacement drive
+has a 4-6 hour procurement lead time? Answer in two sentences.
+```
+
+**Response (full):**
+```
+Yes, you should escalate the incident because a 4-6 hour delay in replacing
+a drive in a degraded RAID-6 array increases the window of vulnerability to
+a second drive failure. Escalation ensures that management is aware of the
+heightened risk of data loss and can authorize emergency procurement or
+contingency measures if necessary.
+```
+
+**Logged:** latency 3,396ms | status: success | prompt_chars: 170 | resp_chars: 325
+
+---
+
+### Audit Trail Summary
+
+| | Request 1 | Request 2 | Request 3 |
+|--|-----------|-----------|-----------|
 | User | engineer_alice | engineer_alice | engineer_bob |
-| Model | gemma4:26b | gemma4:26b | gemma4:26b |
-| Latency | 19,195ms | 12,830ms | 3,249ms |
+| Latency | 21,986ms | 14,783ms | 3,396ms |
 | Status | success | success | success |
+| Prompt chars | 201 | 134 | 170 |
+| Response chars | 291 | 892 | 325 |
 
-**Request 1 response (truncated):**
-> The most likely root cause is a resource exhaustion or configuration issue (such as a connection pool exhaustion)...
-
-**Request 2 response (truncated):**
-> To perform this operation without locking your table and causing an outage, you must use the `CONCURRENTLY` option...
-
-**Request 3 response (truncated):**
-> Yes, you should escalate the incident because a 4-6 hour delay in replacing a drive in a degraded RAID array...
-
-All three responses are technically correct and consistent with Phase 6 benchmark findings.
+All three responses are technically correct and consistent with Phase 6 ITSM benchmark findings. Request 2 is the longest response (892 chars) which explains its higher latency relative to Request 3.
 
 ### User Activity Report — engineer_alice
 
@@ -137,15 +195,17 @@ All three responses are technically correct and consistent with Phase 6 benchmar
 Total requests   : 2
 Successes        : 2
 Errors           : 0
-Avg latency      : 16,013ms
-Max latency      : 19,195ms
+Avg latency      : 18,385ms
+Max latency      : 21,986ms
 Chars sent       : 335
-Chars received   : 1,464
-First request    : 2026-04-21T09:20:58Z
-Last request     : 2026-04-21T09:21:17Z
+Chars received   : 1,183
+First request    : 2026-04-21T09:37:58Z
+Last request     : 2026-04-21T09:38:20Z
 ```
 
-**Latency observation:** Request 1 (19,195ms) is slower than Request 2 (12,830ms) despite being a simpler prompt. This is consistent with Phase 1 findings: the first request after a model load is slower due to KV cache warmup. By Request 2, the model is warm.
+**Latency observation:** Request 1 (21,986ms) is slower than Request 2 (14,783ms) despite being a shorter prompt and a shorter response. This is consistent with Phase 1 findings — the first request after model load is slower due to KV cache warmup. By Request 2, the model is warm and responses come faster even when longer.
+
+**engineer_bob** sent only one request (3,396ms) — faster because the model was warm and the question had a short, specific answer ("two sentences" constraint).
 
 ---
 
