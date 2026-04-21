@@ -30,3 +30,7 @@ build/
 .env
 *.pem
 *.key
+
+# MkDocs
+site/
+.mkdocs-cache/

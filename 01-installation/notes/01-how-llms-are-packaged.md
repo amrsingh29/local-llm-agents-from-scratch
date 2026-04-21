@@ -76,7 +76,11 @@ Ollama is not a model. It is an **inference server** that:
 
 This is why your Python script used `requests.post()` to a local URL — you were talking to the Ollama server, which in turn ran inference on the model.
 
+```python title="01_first_inference.py"
+--8<-- "01-installation/code/01_first_inference.py"
 ```
+
+```text
 Your Python script
       ↓  HTTP POST
 Ollama server (port 11434)
